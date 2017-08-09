@@ -1,0 +1,68 @@
+<%= content_for(:title,  '关注区块列表 | BLOCK') %>
+<section class="content-header">
+  <h1>
+    关注区块链 <small>信息预览</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-btc"></i> Dashboard</a></li>
+    <li class="active"><i class="fa fa-btc"></i> 关注区块</li>
+  </ol>
+</section>
+<section class="content">
+  <div class="box box-primary">
+    <div class="box-header">
+      <a href="<%= new_trade_focus_block_path %>" class="btn bg-primary btn-flat"><i class="ion-plus"></i> 添加关注</a>
+    </div>
+    <div class="box-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+            <thead>
+            <tr>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">区块</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">数量</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">总价</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">权重</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">振幅</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">状态</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center;width: 240px">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @focus.each do |item| %>
+              <tr style="text-align: center">
+                <td><%= item.block.try(:chinese)%></td>
+                <td><%= item.buy_amount %></td>
+                <td><%= item.total_price %></td>
+                <td><%= item.sell_weights %></td>
+                <td><%= item.sell_amplitude %></td>
+                <td><%= item.zhuangtai %></td>
+                <td>
+                  <a href="<%= edit_trade_focus_block_path(item) %>" class="btn bg-orange btn-flat">
+                    <i class="glyphicon glyphicon-edit"></i>
+                    编辑
+                  </a>
+                  <a href="<%= trade_focus_block_path(item) %>" class="btn bg-red btn-flat" data-method="delete" data-confirm="确定删除关注区块吗？">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    删除
+                  </a>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="dataTables_info" id="example1_info" role="status" aria-live="polite"><h5>总计：「<%= @focus.count %>」区块</h5></div>
+        </div>
+        <div class="col-sm-17">
+          <div class="dataTables_paginate paging_simple_numbers">
+          <%= will_paginate @focus, :class=>'apple_pagination' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

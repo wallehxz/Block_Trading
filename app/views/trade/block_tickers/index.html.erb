@@ -1,0 +1,61 @@
+<%= content_for(:title,  '价格行情列表 | BLOCK') %>
+<section class="content-header">
+  <h1>
+    <%= @block.chinese %>「<%= @block.english %> 」<small>价格行情</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-btc"></i> Dashboard</a></li>
+    <li class="active"><i class="fa fa-btc"></i> 价格行情</li>
+  </ol>
+</section>
+<section class="content">
+  <div class="box box-primary">
+    <div class="box-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+            <thead>
+            <tr>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">成交价</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">买一价</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">卖一价</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">时间</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center;width: 163px">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @tickers.each do |item| %>
+              <tr style="text-align: center">
+                <td><%= item.last_price %></td>
+                <td><%= item.buy_price %></td>
+                <td><%= item.sell_price %></td>
+                <td><%= item.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+                <td>
+                  <a href="<%= edit_trade_block_block_ticker_path(@block,item) %>" class="btn bg-orange btn-flat">
+                    <i class="glyphicon glyphicon-edit"></i>
+                    编辑
+                  </a>
+                  <a href="<%= trade_block_block_ticker_path(@block,item) %>" class="btn bg-red btn-flat" data-method="delete" data-confirm="确定删除该条轮播吗？">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    删除
+                  </a>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="dataTables_info" id="example1_info" role="status" aria-live="polite"><h5>总计：「<%= @tickers.count %>」条</h5></div>
+        </div>
+        <div class="col-sm-12">
+          <div class="dataTables_paginate paging_simple_numbers">
+           <%= will_paginate @tickers, :class=>'apple_pagination' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

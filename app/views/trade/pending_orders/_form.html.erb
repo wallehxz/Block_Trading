@@ -1,0 +1,67 @@
+<%= form_for(['trade',@order]) do |f| %>
+<div class="box-body">
+  <div class="col-md-5">
+    <div class="form-group has-error">
+      <label>区块</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-btc"></i>
+        </div>
+        <%= f.text_field :block, class:'form-control', placeholder:'（必填* 区块链名称）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>买卖</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-gg"></i>
+        </div>
+        <%= f.select(:business,[['买入',1],['卖出',2]], {prompt:'请选择挂单类型'},{:class => 'form-control'}) %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>数量</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-codepen"></i>
+        </div>
+        <%= f.text_field :amount, class:'form-control', placeholder:'（必填* 区块链挂单价格）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>单价</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-cny"></i>
+        </div>
+        <%= f.text_field :price, class:'form-control', placeholder:'（必填* 区块链数量）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>总计</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-usd"></i>
+        </div>
+        <%= f.text_field :consume, class:'form-control', placeholder:'（必填* 总计花费）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>状态</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-check-square-o"></i>
+        </div>
+        <%= f.select(:state,[['未激活',0],['未生效',2],['已挂单',1]], {prompt:'请选择状态'},{:class => 'form-control'}) %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <hr>
+    <div>
+      <button type="submit" class="btn bg-maroon btn-flat" style="width: 120px">提交</button>
+      <a href="<%= trade_pending_orders_path %>" class="btn bg-navy btn-flat" style="width: 120px">取消</a>
+    </div>
+  </div>
+</div>
+<% end %>

@@ -1,0 +1,53 @@
+<section class="sidebar">
+  <div class="user-panel">
+    <div class="pull-left image">
+      <img src="<%= image_path('favicon.png')%>" class="img-circle" alt="User Image">
+    </div>
+    <div class="pull-left info">
+      <p><%= current_user.email.split('@')[0] %></p>
+      <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+    </div>
+  </div>
+  <form action="#" method="get" class="sidebar-form">
+    <div class="input-group">
+      <input type="text" name="q" class="form-control" placeholder="Search...">
+      <span class="input-group-btn">
+        <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+        </button>
+      </span>
+    </div>
+  </form>
+  <ul class="sidebar-menu">
+    <li class="header">交易中心</li>
+    <li class="treeview <% if controller_name=='dashboard' %>active<% end %>">
+      <a href="<%= trade_root_path %>" target="_self">
+        <i class="fa fa-dashboard"></i> <span> 区块趋势</span>
+      </a>
+    </li>
+    <li class="treeview <% if controller_name=='blocks' %>active<% end %>">
+      <a href="<%= trade_blocks_path %>" target="_self">
+        <i class="fa fa-btc"></i> <span> 区块链表</span>
+      </a>
+    </li>
+    <li class="treeview <% if controller_name=='block_tickers' %>active<% end %>">
+      <a href="#" target="_self">
+        <i class="fa fa-area-chart"></i> <span> 价格行情</span>
+      </a>
+    </li>
+    <li class="treeview <% if controller_name=='focus_block' %>active<% end %>">
+      <a href="<%= trade_focus_blocks_path %>" target="_self">
+        <i class="fa fa-heartbeat"></i> <span>  关注区块</span>
+      </a>
+    </li>
+    <li class="treeview <% if controller_name=='pending_orders' %>active<% end %>">
+      <a href="<%= trade_pending_orders_path %>" target="_self">
+        <i class="fa fa-cny"></i> <span> 买卖挂单</span>
+      </a>
+    </li>
+    <li class="treeview <% if controller_name=='balances' %>active<% end %>">
+      <a href="<%= trade_balances_path %>" target="_self">
+        <i class="fa fa-credit-card"></i> <span> 区块余额</span>
+      </a>
+    </li>
+  </ul>
+</section>

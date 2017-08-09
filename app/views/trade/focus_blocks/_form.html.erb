@@ -1,0 +1,67 @@
+<%= form_for(['trade',@focus]) do |f| %>
+<div class="box-body">
+  <div class="col-md-5">
+    <div class="form-group has-error">
+      <label>区块链</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-btc"></i>
+        </div>
+        <%= f.select(:block_id, Block.all.map{|x| [x.chinese,x.id]}, {prompt:'请选择区块链'},{:class => 'form-control'}) %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>激活状态</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-flag"></i>
+        </div>
+        <%= f.select(:activation,[['启用',true],['禁用',false]], {prompt:'请选择是否激活'},{:class => 'form-control'}) %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>买入数量</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-spinner"></i>
+        </div>
+        <%= f.text_field :buy_amount, class:'form-control', placeholder:'（必填* 每次挂单期望的最大数量）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>买入总价</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-cny"></i>
+        </div>
+        <%= f.text_field :total_price, class:'form-control', placeholder:'（必填* 每次买入期望最大的总价）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>卖出权重</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-gavel"></i>
+        </div>
+        <%= f.text_field :sell_weights, class:'form-control', placeholder:'（必填* 每次挂单卖出的数量权重 范围 (0 ~ 1]）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>卖出振幅</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-signal"></i>
+        </div>
+        <%= f.text_field :sell_amplitude, class:'form-control', placeholder:'（必填* 卖出的价格比买入价格最少幅度）' %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <hr>
+    <div>
+      <button type="submit" class="btn bg-maroon btn-flat" style="width: 120px">提交</button>
+      <a href="<%= trade_focus_blocks_path %>" class="btn bg-navy btn-flat" style="width: 120px">取消</a>
+    </div>
+  </div>
+</div>
+<% end %>
