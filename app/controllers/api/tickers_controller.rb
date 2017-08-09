@@ -95,7 +95,7 @@ class Api::TickersController < ApplicationController
       generate_order(focus.block.english,1,focus.buy_amount * 0.3,buy_price)
     elsif focus.block.three_day_minimum > buy_price
       generate_order(focus.block.english,1,focus.buy_amount * 0.5,buy_price)
-    elsif 24h_minimum == market
+    elsif minimum_24h == market
       generate_order(focus.block.english,1,focus.buy_amount * 0.1,buy_price)
     end
 

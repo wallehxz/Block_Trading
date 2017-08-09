@@ -35,7 +35,7 @@ class Block < ActiveRecord::Base
     return 0
   end
 
-  def 24h_minimum
+  def minimum_24h
     if self.tickers.last(48).count > 0
       return self.tickers.last(48).map{|x| x.last_price}.min
     end
