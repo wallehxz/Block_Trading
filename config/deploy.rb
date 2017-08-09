@@ -1,7 +1,7 @@
 # config valid only for current version of Capistrano
 #lock '3.4.1'
 
-set :application, 'kupper'
+set :application, 'block'
 set :repo_url, 'git@github.com:kooogle/Block_Trading.git'
 set :ssh_options, { keys: %w{~/.ssh/id_rsa}, forward_agent: true, auth_methods: %w(publickey) }
 set :scm, :git
@@ -19,6 +19,7 @@ set :puma_init_active_record, true
 set :linked_files, %w{
   config/database.yml
   config/secrets.yml
+  config/settings.rb
 }
 
 set :linked_dirs, %w{
