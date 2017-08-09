@@ -1,31 +1,40 @@
-<%= form_for(['trade',@block,@ticker]) do |f| %>
+<%= form_for(['trade',@balance]) do |f| %>
 <div class="box-body">
   <div class="col-md-5">
     <div class="form-group has-error">
-      <label>当前价</label>
+      <label>区块链</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-btc"></i>
+        </div>
+        <%= f.text_field :block, class:'form-control', placeholder:'（必填* 区块链名称）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>持有数量</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-tint"></i>
+        </div>
+        <%= f.text_field :amount, class:'form-control', placeholder:'（必填* 区块链持有数量）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>买入价</label>
       <div class="input-group">
         <div class="input-group-addon">
           <i class="fa fa-cny"></i>
         </div>
-        <%= f.text_field :last_price, class:'form-control', placeholder:'（必填* 区块链中文简称）' %>
+        <%= f.text_field :buy_price, class:'form-control', placeholder:'（必填* 区块链买入价格）' %>
       </div>
     </div>
     <div class="form-group has-error">
-      <label>买一价</label>
+      <label>卖出价</label>
       <div class="input-group">
         <div class="input-group-addon">
           <i class="fa fa-won"></i>
         </div>
-        <%= f.text_field :buy_price, class:'form-control', placeholder:'（必填* 区块链英文简称）' %>
-      </div>
-    </div>
-    <div class="form-group has-error">
-      <label>卖一价</label>
-      <div class="input-group">
-        <div class="input-group-addon">
-          <i class="fa fa-usd"></i>
-        </div>
-        <%= f.text_field :sell_price, class:'form-control', placeholder:'（必填* 区块链英文简称）' %>
+        <%= f.text_field :sell_price, class:'form-control', placeholder:'（必填* 区块链卖出价格）' %>
       </div>
     </div>
   </div>
@@ -33,7 +42,7 @@
     <hr>
     <div>
       <button type="submit" class="btn bg-maroon btn-flat" style="width: 120px">提交</button>
-      <a href="<%= request.referrer %>" class="btn bg-navy btn-flat" style="width: 120px">取消</a>
+      <a href="<%= trade_balances_path %>" class="btn bg-navy btn-flat" style="width: 120px">取消</a>
     </div>
   </div>
 </div>

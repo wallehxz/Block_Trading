@@ -29,7 +29,7 @@ class Trade::BalancesController < Trade::BaseController
       redirect_to(session[:return_to] || trade_balances_path)
     end
 
-    def set_ticker
+    def set_balance
        @balance = Balance.find(params[:id])
     end
 
