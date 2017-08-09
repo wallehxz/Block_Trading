@@ -7,7 +7,7 @@ class Api::TickersController < ApplicationController
         generate_ticker(block.id,tick[block.english]['ticker'])
       end
     end
-    render json:{code:200,msg:'update success'}
+    redirect_to api_quotes_analysis_path
   end
 
   def get_all_ticker
@@ -65,7 +65,7 @@ class Api::TickersController < ApplicationController
     FocusBlock.where(activation:true).each do |item|
       market_quotes(item) rescue nil
     end
-    render json:{code:200,msg:'update success'}
+    render json:{code:200,msg:'analysis success'}
   end
 
   def market_quotes(focus)
@@ -77,7 +77,7 @@ class Api::TickersController < ApplicationController
     if market.max == market[-2] && market[-2] > market[-1]
       sell_block(focus)
     elsif market.min == market[-2] && market[-1] > market[-2]
-      #  buy_block(focus) 数据不足暂不考虑数据 to do ...
+      buy_block(focus,market)
     end
   end
 
@@ -89,7 +89,15 @@ class Api::TickersController < ApplicationController
     end
   end
 
-  def buy_block(focus)
+  def buy_block(focus,market)
+    buy_price = focus.tickers.last.sell_price
+    if focus.block.yesterday_minimum > buy_price && focus.block.yesterday_minimum < buy_price
+      generate_order(focus.block.english,1,focus.buy_amount * 0.3,buy_price)
+    elsif focus.block.three_day_minimum > buy_price
+      generate_order(focus.block.english,1,focus.buy_amount * 0.5,buy_price)
+    elsif 24h_minimum == market
+      generate_order(focus.block.english,1,focus.buy_amount * 0.1,buy_price)
+    end
 
   end
 

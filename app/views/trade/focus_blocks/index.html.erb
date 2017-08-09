@@ -31,7 +31,7 @@
             <tbody>
             <% @focus.each do |item| %>
               <tr style="text-align: center">
-                <td><%= item.block.try(:chinese)%></td>
+                <td><%= item.block.try(:full_name)%></td>
                 <td><%= item.buy_amount %></td>
                 <td><%= item.total_price %></td>
                 <td><%= item.sell_weights %></td>

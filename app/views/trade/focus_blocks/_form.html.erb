@@ -7,7 +7,7 @@
         <div class="input-group-addon">
           <i class="fa fa-btc"></i>
         </div>
-        <%= f.select(:block_id, Block.all.map{|x| [x.chinese,x.id]}, {prompt:'请选择区块链'},{:class => 'form-control'}) %>
+        <%= f.select(:block_id, Block.named.map{|x| [x.full_name,x.id]}, {prompt:'请选择区块链'},{:class => 'form-control'}) %>
       </div>
     </div>
     <div class="form-group has-error">

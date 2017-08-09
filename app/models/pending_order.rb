@@ -11,7 +11,7 @@ class PendingOrder < ActiveRecord::Base
   validates_presence_of :block, :amount, :price, :business
   self.per_page = 10
   after_save :calculate_consume
-  after_save :sync_order
+  # after_save :sync_order
 
   def maimai
     {'1'=>'买入','2'=>'卖出'}[self.business]
