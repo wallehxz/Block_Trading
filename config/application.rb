@@ -48,13 +48,12 @@ module BlockChain
     config.action_mailer.raise_delivery_errors = true
 
     config.action_mailer.smtp_settings = {
-      address:            Settings.email_stmp_address,
-      port:               Settings.email_stmp_port,
-      user_name:          Settings.devise_email,
-      password:           Settings.devise_password,
-      authentication:     'plain',
-      enable_starttls_auto:true
-      # :openssl_verify_mode => 'none' #Use this because ssl is activated but we have no certificate installed. So clients need to confirm to use the untrusted url.
+      address:         Settings.email_stmp_address,
+      port:            Settings.email_stmp_port,
+      user_name:       Settings.email_account,
+      password:        Settings.email_password,
+      authentication: :plain,
+      enable_starttls_auto: true
     }
   end
 end
