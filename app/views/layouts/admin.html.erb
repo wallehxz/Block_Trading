@@ -8,6 +8,7 @@
   <%= stylesheet_link_tag 'lte/application', media: 'all', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
   <%= favicon_link_tag 'favicon.png' %>
+  <%= javascript_include_tag 'lte/application', 'data-turbolinks-track' => true %>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -27,6 +28,5 @@
   </aside>
   <div class="control-sidebar-bg"></div>
 </div>
-<%= javascript_include_tag 'lte/application', 'data-turbolinks-track' => true %>
 </body>
 </html>

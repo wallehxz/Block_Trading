@@ -68,6 +68,48 @@ class Api::TickersController < ApplicationController
     render json:{code:200,msg:'analysis success'}
   end
 
+  def market_report
+    string = ''
+    Block.named.each do |item|
+      string << block_analysis(item)
+    end
+    Notice.market_report(Settings.receive_email,string).deliver_now if string.present?
+    render json:{code:200,msg:'report success'}
+  end
+
+  def block_analysis(block)
+    market = block.tickers.last(10).map {|x| x.last_price}
+    return '' if market.count < 10
+    if market.max == market[-2] && market[-2] > market[-1]
+      return rise_tip(block,market)
+    elsif market.min == market[-2] && market[-1] > market[-2]
+      return fall_tip(block,market)
+    end
+    ''
+  end
+
+  def rise_tip(block,market)
+    tip = ''
+    string = ''
+    if block.maximun_24h == market.max
+      tip << ", 24小时最低价: #{block.minimum_24h}，最高价: #{block.maximun_24h}, 涨幅: #{amplitude(block.minimum_24h,block.maximun_24h)}%"
+    elsif block.yesterday_maximun < market.max
+      tip << ", 2天内历史涨幅： #{amplitude(block.yesterday_maximun,market[-1])}%"
+    end
+    string << rise_template(block.english,market[-1],tip)
+  end
+
+  def fall_tip(block,market)
+    tip = ''
+    string = ''
+    if block.minimum_24h == market.min
+      tip << ", 24小时最高价: #{block.maximun_24h}, 最低价: #{block.minimum_24h}, 涨幅: #{amplitude(block.maximun_24h,block.minimum_24h)}%"
+    elsif block.yesterday_minimum > market.min
+      tip << ", 2天内历史跌幅： #{amplitude(block.yesterday_minimum,market.min)}%"
+    end
+    string << fall_template(block.english,market[-1],tip)
+  end
+
   def market_quotes(focus)
     market = focus.tickers.last(10).map {|x| x.last_price}
     inflection_point(focus,market) if market.size > 9
@@ -95,7 +137,7 @@ class Api::TickersController < ApplicationController
       generate_order(focus.block.english,1,focus.buy_amount * 0.3,buy_price)
     elsif focus.block.three_day_minimum > buy_price
       generate_order(focus.block.english,1,focus.buy_amount * 0.5,buy_price)
-    elsif minimum_24h == market
+    elsif minimum_24h == market.min
       generate_order(focus.block.english,1,focus.buy_amount * 0.1,buy_price)
     end
 
@@ -111,7 +153,16 @@ class Api::TickersController < ApplicationController
   end
 
   private
+
     def amplitude(old_price,new_price)
       return ((new_price - old_price) / old_price * 100).to_i
+    end
+
+    def rise_template(block,last_price,opt)
+      "<p style='color:#CC0066'>〖#{block}〗处于涨跌点，当前价格: #{last_price}#{opt}</p>"
+    end
+
+    def fall_template(block,last_price,opt)
+      "<p style='color:#339966'>〖#{block}〗处于跌涨点，当前价格: #{last_price}#{opt}</p>"
     end
 end

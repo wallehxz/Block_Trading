@@ -1,0 +1,80 @@
+<%= content_for(:title,  'Ｋ线行情 | Block') %>
+<section class="content-header">
+  <h1>
+    Ｋ线行情  <small>信息预览</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active"><i class="fa fa-chart"></i> Ｋ线行情 </li>
+  </ol>
+</section>
+<section class="content">
+  <div class="box box-primary">
+    <div class="box-header">
+      <div class="row">
+        <div class="col-sm-2">
+          <select onchange="javascript:location.href = this.value;" class="form-control" style="width: 100px;display: inline;">
+            <option value="?">请选择区块链</option>
+            <% Block.named.each do |item|%>
+              <option value="?block=<%= item.english %>&start=<%= params[:start] %>&end=<%= params[:end]%>" <%= 'selected' if params[:block] == item.english %>><%= item.full_name %></option>
+            <% end %>
+          </select>
+        </div>
+        <div class="col-sm-9">
+          <form action="<%= trade_root_path %>" method="get">
+            <div class="col-sm-3">
+              <div class="form-group has-feedback">
+                <div class="input-group">
+                  <input id='start' type="text" name="start" value="<%= params[:start]%>" class="form-control" placeholder="起始日期">
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group has-feedback">
+                <div class="input-group">
+                  <input id='end' type="text" name="end" value="<%= params[:end]%>" class="form-control" placeholder="截止日期">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default btn-flat" type="submit"><i class="fa fa-search-plus"></i></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="box-body">
+      <div class="row">
+        <div class="col-sm-12">
+        <canvas id="myChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+  var ctx = document.getElementById("myChart").getContext('2d');
+  var myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: <%= raw @date_array %>,
+        datasets: [{
+            label: "<%= @block.chinese %>",
+            data: <%= @value_array %>,
+            fill: false,
+            backgroundColor: 'rgba(75, 192, 192,0.2)',
+            borderColor: 'rgba(75, 192, 192,1)',
+            lineTension: 0.25
+        }]
+      },
+      options: {
+        duration: 2000,
+        title: {
+            display: true,
+            fontSize: 18,
+            fontColor: 'rgba(54, 162, 235, 1)',
+            text: '区块链价格趋势'
+        }
+      }
+  });
+</script>

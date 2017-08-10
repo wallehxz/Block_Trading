@@ -22,22 +22,43 @@ class Block < ActiveRecord::Base
   end
 
   def three_day_minimum
-    if self.interval_historical(3).count > 0
+    if self.interval_historical(3).count > 140
       return self.interval_historical(3).map{|x| x.last_price}.min
     end
     return 0
   end
 
+  def three_day_maximun
+    if self.interval_historical(3).count > 140
+      return self.interval_historical(3).map{|x| x.last_price}.max
+    end
+    return 0
+  end
+
   def yesterday_minimum
-    if self.interval_historical(1).count > 0
+    if self.interval_historical(1).count > 40
       return self.interval_historical(1).map{|x| x.last_price}.min
     end
     return 0
   end
 
+  def yesterday_maximun
+    if self.interval_historical(1).count > 40
+      return self.interval_historical(1).map{|x| x.last_price}.max
+    end
+    return 0
+  end
+
   def minimum_24h
-    if self.tickers.last(48).count > 0
+    if self.tickers.last(48).count > 40
       return self.tickers.last(48).map{|x| x.last_price}.min
+    end
+    return 0
+  end
+
+  def maximun_24h
+    if self.tickers.last(48).count > 40
+      return self.tickers.last(48).map{|x| x.last_price}.max
     end
     return 0
   end

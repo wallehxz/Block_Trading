@@ -2,7 +2,7 @@ class Trade::BlocksController < Trade::BaseController
   before_action :set_block, only:[:edit, :update, :destroy]
 
   def index
-    @blocks = Block.all.paginate(page:params[:page])
+    @blocks = Block.named.paginate(page:params[:page])
   end
 
   def new
