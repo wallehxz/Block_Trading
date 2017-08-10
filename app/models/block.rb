@@ -8,6 +8,7 @@ class Block < ActiveRecord::Base
   validates_uniqueness_of :chinese, :english
   has_one :balance, class_name:'Balance',primary_key:'english', foreign_key:'block'
   has_many :tickers, class_name:'BlockTicker',foreign_key:'block_id'
+  has_many :orders, class_name:'PendingOrder',primary_key:'english', foreign_key:'block'
 
   self.per_page = 10
   scope :named, ->{order(english: :asc)}

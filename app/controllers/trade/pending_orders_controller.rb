@@ -43,7 +43,6 @@ class Trade::PendingOrdersController < Trade::BaseController
     end
 
     def pending_order_params
-      params.require(:pending_order).permit(:block,:business,:amount,:price,
-        :consume,:state)
+      params.require(:pending_order).permit(:block,:business,:amount,:price,:consume,:state)
     end
 end

@@ -12,6 +12,5 @@ class BlockTicker < ActiveRecord::Base
   def three_historical
     before_day = Date.current.yesterday.to_s
     before_three_day = (Date.current - 3.day).to_s
-
   end
 end

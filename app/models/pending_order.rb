@@ -9,9 +9,10 @@
 
 class PendingOrder < ActiveRecord::Base
   validates_presence_of :block, :amount, :price, :business
+  belongs_to :chain, class_name:'Block', primary_key:'english', foreign_key:'block'
   self.per_page = 10
   after_save :calculate_consume
-  # after_save :sync_order
+  after_save :sync_order
 
   def maimai
     {'1'=>'买入','2'=>'卖出'}[self.business]
@@ -33,7 +34,11 @@ class PendingOrder < ActiveRecord::Base
     if self.state == 0
       res = PendingOrder.remote_order(self.block,self.business,self.price,self.amount)
       if res.include?('succ')
-        #邮件通知 send_business_email(order,email)
+        Notice.business_notice(Settings.receive_email,self).deliver_now
+        Balance.find_or_create_by(block:self.block) do |item|
+          item.buy_price = self.price if self.business == '1'
+          item.sell_price = self.price if self.business == '2'
+        end
         return self.update_attributes(state: 1)
       end
       self.update_attributes(state: 2)

@@ -65,13 +65,13 @@ class Api::TickersController < ApplicationController
     FocusBlock.where(activation:true).each do |item|
       market_quotes(item) rescue nil
     end
-    render json:{code:200,msg:'analysis success'}
+    redirect_to market_report_path
   end
 
   def market_report
     string = ''
     Block.named.each do |item|
-      string << block_analysis(item)
+      string << block_analysis(item) rescue ''
     end
     Notice.market_report(Settings.receive_email,string).deliver_now if string.present?
     render json:{code:200,msg:'report success'}
@@ -79,13 +79,11 @@ class Api::TickersController < ApplicationController
 
   def block_analysis(block)
     market = block.tickers.last(10).map {|x| x.last_price}
-    return '' if market.count < 10
     if market.max == market[-2] && market[-2] > market[-1]
       return rise_tip(block,market)
     elsif market.min == market[-2] && market[-1] > market[-2]
       return fall_tip(block,market)
     end
-    ''
   end
 
   def rise_tip(block,market)
@@ -117,9 +115,9 @@ class Api::TickersController < ApplicationController
 
   def inflection_point(focus,market)
     if market.max == market[-2] && market[-2] > market[-1]
-      sell_block(focus)
+      short_sell_block(focus,market)
     elsif market.min == market[-2] && market[-1] > market[-2]
-      buy_block(focus,market)
+      short_buby_block(focus,market)
     end
   end
 
@@ -140,7 +138,27 @@ class Api::TickersController < ApplicationController
     elsif minimum_24h == market.min
       generate_order(focus.block.english,1,focus.buy_amount * 0.1,buy_price)
     end
+  end
 
+  def short_sell_block(focus,market)
+    if focus.block.maximun_24h == market[-2]
+      sell_price = focus.tickers.last.buy_price
+      if balance = focus.block.balance
+        if balance.amount > 0 && sell_price > balance.buy_price
+          generate_order(focus.block.english,2,balance.amount,sell_price)
+        end
+      end
+    end
+  end
+
+  def short_buby_block(focus,market)
+    if focus.block.minimum_24h == market[-2]
+      buy_price = focus.tickers.last.sell_price
+      balance = focus.block.balance
+      if balance.nil? || (balance && balance.amount < 1)
+        generate_order(focus.block.english,1,focus.total_price / sell_price,sell_price)
+      end
+    end
   end
 
   def generate_order(block,business,amount,price)

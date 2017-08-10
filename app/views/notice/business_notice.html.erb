@@ -461,7 +461,6 @@
               </div>
               <!--[if (mso)|(IE)]></td><td style="width: 280px" valign="top"><![endif]-->
               <div class="webversion" style="display: table-cell;Float: left;font-size: 12px;line-height: 19px;max-width: 280px;min-width: 139px; width: 139px;width: calc(14100% - 78680px);padding: 10px 0 5px 0;text-align: right;color: #adb3b9;font-family: sans-serif;">
-                <p style="Margin-top: 0;Margin-bottom: 0;">No Images? <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #adb3b9;" href="http://tsinova.createsend1.com/t/j-e-uulituk-l-r/">Click here</a></p>
               </div>
               <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
             </div>
@@ -491,27 +490,21 @@
 
           <div style="line-height:15px;font-size:15px;">&nbsp;</div>
 
-          <div class="layout one-col fixed-width" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
+          <div class="layout one-col fixed-width" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
             <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
               <!--[if (mso)|(IE)]><table align="center" cellpadding="0" cellspacing="0" role="presentation"><tr class="layout-fixed-width" style="background-color: #ffffff;"><td style="width: 600px" class="w560"><![endif]-->
               <div class="column" style="text-align: left;color: #8e959c;font-size: 14px;line-height: 21px;font-family: sans-serif;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);">
 
                 <div style="Margin-left: 20px;Margin-right: 20px;">
-                  <h2 style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #e31212;font-size: 26px;line-height: 34px;font-family: Avenir,sans-serif;text-align: center;"><strong>挂单时间<%= %></strong></h2>
+                  <h2 style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #e31212;font-size: 26px;line-height: 34px;font-family: Avenir,sans-serif;text-align: center;"><strong><%= @order.block.upcase %><%= @order.maimai %>挂单通知</strong><br><%= Time.now.strftime('%Y-%m-%d %H:%M')%></h2>
                 </div>
 
                 <div style="Margin-left: 20px;Margin-right: 20px;">
-                  <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 40px;background-color: #ccc;Margin-bottom: 20px;">&nbsp;</div>
+                  <div class="divider" style="display: block;font-size: 2px;line-height: 2px;Margin-left: auto;Margin-right: auto;width: 320px;background-color: #ccc;Margin-bottom: 20px;">&nbsp;</div>
                 </div>
 
                 <div style="Margin-left: 20px;Margin-right: 20px;">
-                  <p style="Margin-top: 0;Margin-bottom: 20px;">
-                  </div>
-
-                  <div style="Margin-left: 20px;Margin-right: 20px;">
-                    <%= msg %>
-                  </div>
-
+                  <p> 区块链<%= @order.chain.chinese %> <%= @order.block.upcase %> <%= @order.maimai %>挂单成功，单价：<%= @order.price %>，数量：<%= @order.amount %>，总计：<%= @order.consume %></p>
                 </div>
                 <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
               </div>
@@ -548,7 +541,6 @@
                   <div class="column" style="text-align: left;font-size: 12px;line-height: 19px;color: #adb3b9;font-family: sans-serif;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);">
                     <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 10px;Margin-bottom: 10px;">
                       <div style="font-size: 12px;line-height: 19px;">
-                        <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #adb3b9;" href="http://tsinova.createsend1.com/t/j-u-uulituk-l-y/">Unsubscribe</a>
                       </div>
                     </div>
                   </div>

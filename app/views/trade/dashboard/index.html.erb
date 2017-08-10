@@ -63,21 +63,21 @@
       data: {
         labels: <%= raw @date_array %>,
         datasets: [{
-            label: "<%= @block.chinese %>",
-            data: <%= @value_array %>,
-            fill: false,
-            backgroundColor: 'rgba(75, 192, 192,0.2)',
-            borderColor: 'rgba(75, 192, 192,1)',
-            lineTension: 0.25,
+          label: "<%= @block.chinese %>",
+          data: <%= @value_array %>,
+          fill: false,
+          backgroundColor: 'rgba(75, 192, 192,0.2)',
+          borderColor: 'rgba(75, 192, 192,1)',
+          lineTension: 0.25,
         }]
       },
       options: {
         duration: 200,
         title: {
-            display: true,
-            fontSize: 18,
-            fontColor: 'rgba(54, 162, 235, 1)',
-            text: '区块链价格趋势'
+          display: true,
+          fontSize: 18,
+          fontColor: 'rgba(54, 162, 235, 1)',
+          text: '区块链价格趋势'
         }
       }
   });
