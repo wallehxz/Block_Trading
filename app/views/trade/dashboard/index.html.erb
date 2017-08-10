@@ -1,4 +1,7 @@
 <%= content_for(:title,  'Ｋ线行情 | Block') %>
+<%= content_for :script do %>
+  <%= javascript_include_tag 'chart', 'data-turbolinks-track' => true %>
+<% end %>
 <section class="content-header">
   <h1>
     Ｋ线行情  <small>信息预览</small>
@@ -13,7 +16,7 @@
     <div class="box-header">
       <div class="row">
         <div class="col-sm-2">
-          <select onchange="javascript:location.href = this.value;" class="form-control" style="width: 100px;display: inline;">
+          <select onchange="javascript:location.href = this.value;" class="form-control" style="display: inline;">
             <option value="?">请选择区块链</option>
             <% Block.named.each do |item|%>
               <option value="?block=<%= item.english %>&start=<%= params[:start] %>&end=<%= params[:end]%>" <%= 'selected' if params[:block] == item.english %>><%= item.full_name %></option>
@@ -25,14 +28,14 @@
             <div class="col-sm-3">
               <div class="form-group has-feedback">
                 <div class="input-group">
-                  <input id='start' type="text" name="start" value="<%= params[:start]%>" class="form-control" placeholder="起始日期">
+                  <input id='start' type="text" name="start" value="<%= params[:start] || Date.current.to_s %>" class="form-control" placeholder="起始日期">
                 </div>
               </div>
             </div>
             <div class="col-sm-3">
               <div class="form-group has-feedback">
                 <div class="input-group">
-                  <input id='end' type="text" name="end" value="<%= params[:end]%>" class="form-control" placeholder="截止日期">
+                  <input id='end' type="text" name="end" value="<%= params[:end] || Date.current.to_s %>" class="form-control" placeholder="截止日期">
                   <span class="input-group-btn">
                     <button class="btn btn-default btn-flat" type="submit"><i class="fa fa-search-plus"></i></button>
                   </span>
@@ -64,11 +67,11 @@
             fill: false,
             backgroundColor: 'rgba(75, 192, 192,0.2)',
             borderColor: 'rgba(75, 192, 192,1)',
-            lineTension: 0.25
+            lineTension: 0.25,
         }]
       },
       options: {
-        duration: 2000,
+        duration: 200,
         title: {
             display: true,
             fontSize: 18,

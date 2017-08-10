@@ -2,7 +2,6 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require jquery-2.2.3.min
-//= require chart
 //= require lte/js/jquery-ui.min
 //= require lte/js/bootstrap.min
 //= require lte/js/raphael-min
@@ -29,22 +28,6 @@
     reader.readAsDataURL(obj.files[0]);
   }
  };
-
-$('input[type="checkbox"]').on('ifChanged', function (e) {
-  $(this).trigger("change", e);
-});
-$('input[type="checkbox"]').on('ifChanged', function (e) {
-  $(this).trigger("click", e);
-});
-
-
-$('input[type="radio"]').on('ifChanged', function (e) {
-  $(this).trigger("click", e);
-});
-
-$(function () {
-  $(".textarea").wysihtml5();
-});
 
 $('#start').datepicker({
   autoclose: true,

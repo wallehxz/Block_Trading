@@ -6,9 +6,9 @@
   <title><%= content_for?(:title) ? yield(:title) : 'Dashboard | Veloup' %></title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <%= stylesheet_link_tag 'lte/application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= content_for :script %>
   <%= csrf_meta_tags %>
   <%= favicon_link_tag 'favicon.png' %>
-  <%= javascript_include_tag 'lte/application', 'data-turbolinks-track' => true %>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -29,4 +29,5 @@
   <div class="control-sidebar-bg"></div>
 </div>
 </body>
+<%= javascript_include_tag 'lte/application', 'data-turbolinks-track' => true %>
 </html>
