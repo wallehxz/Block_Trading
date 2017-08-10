@@ -49,9 +49,9 @@ module BlockChain
       :port => Settings.email_stmp_port,
       :user_name => Settings.devise_email,
       :password => Settings.devise_password,
-      :authentication => "login",
-      :enable_starttls_auto => true,
-      :openssl_verify_mode => 'none' #Use this because ssl is activated but we have no certificate installed. So clients need to confirm to use the untrusted url.
+      :authentication => "plain",
+      :enable_starttls_auto => true
+      # :openssl_verify_mode => 'none' #Use this because ssl is activated but we have no certificate installed. So clients need to confirm to use the untrusted url.
     }
   end
 end
