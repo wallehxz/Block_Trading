@@ -44,6 +44,9 @@ module BlockChain
     # end
 
     config.action_mailer.delivery_method = :smtp
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.raise_delivery_errors = true
+
     config.action_mailer.smtp_settings = {
       :address => Settings.email_stmp_address,
       :port => Settings.email_stmp_port,
