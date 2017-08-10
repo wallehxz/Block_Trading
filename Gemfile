@@ -1,7 +1,7 @@
 source 'https://gems.ruby-china.org/'  #Ruby-China源
 #source 'https://rubygems.org/'  #官方源
 
-gem 'rails', '4.2.8'
+gem 'rails', '4.2.7'
 gem 'mysql2', '0.4.5' # Use mysql as the database for Active Record
 gem 'sass-rails', '5.0.6' # Use SCSS for stylesheets
 gem 'uglifier', '3.0.2' # Use Uglifier as compressor for JavaScript assets
