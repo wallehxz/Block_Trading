@@ -19,7 +19,7 @@
           <select onchange="javascript:location.href = this.value;" class="form-control" style="display: inline;">
             <option value="?">请选择区块链</option>
             <% Block.named.each do |item|%>
-              <option value="?block=<%= item.english %>&start=<%= params[:start] %>&end=<%= params[:end]%>" <%= 'selected' if params[:block] == item.english %>><%= item.full_name %></option>
+              <option value="?block=<%= item.english %>&start=<%= params[:start] || Date.current.to_s %>&end=<%= params[:end] || Date.current.to_s %>" <%= 'selected' if params[:block] == item.english %>><%= item.full_name %></option>
             <% end %>
           </select>
         </div>
@@ -29,6 +29,7 @@
               <div class="form-group has-feedback">
                 <div class="input-group">
                   <input id='start' type="text" name="start" value="<%= params[:start] || Date.current.to_s %>" class="form-control" placeholder="起始日期">
+                  <input type="hidden" name="block" value="<%= params[:block] || 'btc'%>">
                 </div>
               </div>
             </div>
