@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: Settings.devise_email
+  default from: Settings.email_account
   layout false
 end
