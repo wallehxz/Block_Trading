@@ -121,7 +121,28 @@ class Api::TickersController < ApplicationController
     if market.max == market[-2] && market[-2] > market[-1]
       short_sell_block(focus,market)
     elsif market.min == market[-2] && market[-1] > market[-2]
-      short_buby_block(focus,market)
+      short_buy_block(focus,market)
+    end
+  end
+
+  def short_sell_block(focus,market)
+    if focus.block.maximun_24h == market[-2]
+      sell_price = focus.tickers.last.buy_price
+      if balance = focus.block.balance
+        if balance.amount > 1 && sell_price > balance.buy_price
+          generate_order(focus.block.english,2,balance.amount,sell_price)
+        end
+      end
+    end
+  end
+
+  def short_buy_block(focus,market)
+    if focus.block.minimum_24h == market[-2]
+      buy_price = focus.tickers.last.sell_price
+      balance = focus.block.balance
+      if balance.nil? || (balance && balance.amount < 1)
+        generate_order(focus.block.english,1,focus.total_price / buy_price,buy_price)
+      end
     end
   end
 
@@ -141,27 +162,6 @@ class Api::TickersController < ApplicationController
       generate_order(focus.block.english,1,focus.buy_amount * 0.5,buy_price)
     elsif minimum_24h == market.min
       generate_order(focus.block.english,1,focus.buy_amount * 0.1,buy_price)
-    end
-  end
-
-  def short_sell_block(focus,market)
-    if focus.block.maximun_24h == market[-2]
-      sell_price = focus.tickers.last.buy_price
-      if balance = focus.block.balance
-        if balance.amount > 0 && sell_price > balance.buy_price
-          generate_order(focus.block.english,2,balance.amount,sell_price)
-        end
-      end
-    end
-  end
-
-  def short_buby_block(focus,market)
-    if focus.block.minimum_24h == market[-2]
-      buy_price = focus.tickers.last.sell_price
-      balance = focus.block.balance
-      if balance.nil? || (balance && balance.amount < 1)
-        generate_order(focus.block.english,1,focus.total_price / sell_price,sell_price)
-      end
     end
   end
 
