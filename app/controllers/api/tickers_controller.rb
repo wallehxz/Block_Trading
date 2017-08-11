@@ -65,7 +65,7 @@ class Api::TickersController < ApplicationController
     FocusBlock.where(activation:true).each do |item|
       market_quotes(item) rescue nil
     end
-    redirect_to market_report_path
+    redirect_to api_market_report_path
   end
 
   def market_report
