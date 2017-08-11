@@ -7,7 +7,8 @@ class Api::TickersController < ApplicationController
         generate_ticker(block.id,tick[block.english]['ticker'])
       end
     end
-    redirect_to api_quotes_analysis_path
+    quotes_analysis
+    market_report
   end
 
   def get_all_ticker
@@ -65,7 +66,6 @@ class Api::TickersController < ApplicationController
     FocusBlock.where(activation:true).each do |item|
       market_quotes(item) rescue nil
     end
-    redirect_to api_market_report_path
   end
 
   def market_report

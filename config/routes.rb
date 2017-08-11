@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   namespace :api do
     get 'last_ticker', to:'tickers#last_ticker'
     get 'sync_balance', to:'tickers#sync_balance'
-    get 'quotes_analysis', to:'tickers#quotes_analysis'
     get 'market_report', to:'tickers#market_report'
   end
 
