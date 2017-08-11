@@ -78,7 +78,7 @@ class Api::TickersController < ApplicationController
   end
 
   def block_analysis(block)
-    market = block.tickers.last(10).map {|x| x.last_price}
+    market = block.tickers.last(12).map {|x| x.last_price}
     if market.max == market[-2] && market[-2] > market[-1]
       return rise_tip(block,market)
     elsif market.min == market[-2] && market[-1] > market[-2]
@@ -92,7 +92,9 @@ class Api::TickersController < ApplicationController
     if block.maximun_24h == market.max
       tip << ", 24小时最低价: #{block.minimum_24h}，最高价: #{block.maximun_24h}, 涨幅: #{amplitude(block.minimum_24h,block.maximun_24h)}%"
     elsif block.yesterday_maximun < market.max
-      tip << ", 2天内历史涨幅： #{amplitude(block.yesterday_maximun,market[-1])}%"
+      tip << ", 2天内历史最高价：#{block.yesterday_maximun} 涨幅：#{amplitude(block.yesterday_maximun,market[-1])}%"
+    elsif block.three_day_maximun < market.max && block.three_day_maximun < block.yesterday_maximun
+      tip << ", 3天内历史最高价：#{block.three_day_maximun} 涨幅：#{amplitude(block.three_day_maximun,market[-1])}%"
     end
     string << rise_template(block.english,market[-1],tip)
   end
@@ -103,14 +105,16 @@ class Api::TickersController < ApplicationController
     if block.minimum_24h == market.min
       tip << ", 24小时最高价: #{block.maximun_24h}, 最低价: #{block.minimum_24h}, 涨幅: #{amplitude(block.maximun_24h,block.minimum_24h)}%"
     elsif block.yesterday_minimum > market.min
-      tip << ", 2天内历史跌幅： #{amplitude(block.yesterday_minimum,market.min)}%"
+      tip << ", 2天内历史最低价： #{block.yesterday_minimum} 跌幅： #{amplitude(block.yesterday_minimum,market.min)}%"
+    elsif block.three_day_minimum > market.min && block.three_day_minimum < block.yesterday_minimum
+      tip << ", 3天内历史最低价：#{block.yesterday_minimum}  跌幅：#{amplitude(block.three_day_minimum,market.min)}%"
     end
     string << fall_template(block.english,market[-1],tip)
   end
 
   def market_quotes(focus)
-    market = focus.tickers.last(10).map {|x| x.last_price}
-    inflection_point(focus,market) if market.size > 9
+    market = focus.tickers.last(12).map {|x| x.last_price}
+    inflection_point(focus,market) if market.size == 12
   end
 
   def inflection_point(focus,market)
