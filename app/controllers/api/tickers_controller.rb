@@ -145,7 +145,7 @@ class Api::TickersController < ApplicationController
       buy_price = focus.tickers.last.sell_price
       balance = focus.block.balance
       if balance.nil? || (balance && balance.amount < 1)
-        generate_order(focus.block.english,1,focus.total_price / buy_price,buy_price)
+        generate_order(focus.block.english,1,(focus.total_price / buy_price).to_i,buy_price)
       end
     end
   end

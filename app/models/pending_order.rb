@@ -33,12 +33,12 @@ class PendingOrder < ActiveRecord::Base
   def sync_order
     if self.state == 0
       tip = PendingOrder.loop_order_request(self.block,self.business,self.price,self.amount)
-      if tip.include?('succ')
+      if tip.to_s.include?('succ')
         Notice.business_notice(Settings.receive_email,self).deliver_now
         PendingOrder.sync_balance(self)
         return self.update_attributes(state: 1)
       else
-        msg = "<p>#{self.block} 挂单#{self.maimai}失败，导致原因#{tip}，请知悉，如有必要，请反馈给开发者,提升系统运行体验</p>"
+        msg = "<p>#{self.block} 挂单#{self.maimai}失败，导致原因: #{tip}，请知悉，如有必要，请反馈给开发者,提升系统运行体验</p>"
         Notice.info_notice(Settings.receive_email,msg).deliver_now
       end
       self.update_attributes(state: 2)
