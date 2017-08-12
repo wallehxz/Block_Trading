@@ -32,16 +32,32 @@ class PendingOrder < ActiveRecord::Base
 
   def sync_order
     if self.state == 0
-      res = PendingOrder.remote_order(self.block,self.business,self.price,self.amount)
-      if res.include?('succ')
+      tip = PendingOrder.loop_order_request(self.block,self.business,self.price,self.amount)
+      if tip.include?('succ')
         Notice.business_notice(Settings.receive_email,self).deliver_now
-        Balance.find_or_create_by(block:self.block) do |item|
-          item.buy_price = self.price if self.business == '1'
-          item.sell_price = self.price if self.business == '2'
-        end
+        PendingOrder.sync_balance(self)
         return self.update_attributes(state: 1)
+      else
+        msg = "<p>#{self.block} 挂单#{self.maimai}失败，导致原因#{tip}，请知悉，如有必要，请反馈给开发者,提升系统运行体验</p>"
+        Notice.info_notice(Settings.receive_email,msg).deliver_now
       end
       self.update_attributes(state: 2)
+    end
+  end
+
+  def self.sync_balance(order)
+    if order.business == '1'
+      if balance = Balance.find_by_block(order.block)
+        balance.update_attributes(buy_price:order.price)
+      else
+        Balance.create(block:order.block,buy_price:order.price)
+      end
+    elsif order.business == '2'
+      if balance = Balance.find_by_block(order.block)
+        balance.update_attributes(sell_price:order.price)
+      else
+        Balance.create(block:order.block,sell_price:order.price)
+      end
     end
   end
 
@@ -63,5 +79,13 @@ class PendingOrder < ActiveRecord::Base
     end
     res.body rescue ''
   end
+
+  def self.loop_order_request(bolck,business,price,amount)
+      5.times do |i|
+        tip = PendingOrder.remote_order(bolck,business,price,amount)
+        return tip if tip.include?('succ')
+      end
+  end
+
 
 end

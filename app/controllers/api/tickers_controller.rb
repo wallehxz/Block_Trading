@@ -53,12 +53,16 @@ class Api::TickersController < ApplicationController
       req.url 'http://api.btc38.com/v1/getMyBalance.php'
       req.body = body_hash
     end
-    JSON.parse(res.body) rescue nil
+    puts res
+    JSON.parse(res.body)
   end
 
   def sync_local(block,amount)
-    Balance.find_or_create_by(block:block) do |item|
-      item.amount = amount
+    balance = Balance.find_by_block(block)
+    if balance
+      blance.update_attributes(amount:amount)
+    else
+      Balance.create(block:block,amount:amount)
     end
   end
 
