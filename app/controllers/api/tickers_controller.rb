@@ -84,18 +84,16 @@ class Api::TickersController < ApplicationController
   def block_analysis(block)
     market = block.tickers.last(12).map {|x| x.last_price}
     if market.max == market[-2] && market[-2] > market[-1]
-      return rise_tip(block,market)
+      return rise_tip(block,market) if block.maximun_24h == market.max
     elsif market.min == market[-2] && market[-1] > market[-2]
-      return fall_tip(block,market)
+      return fall_tip(block,market) if block.minimum_24h == market.min
     end
   end
 
   def rise_tip(block,market)
-    tip = ''
     string = ''
-    if block.maximun_24h == market.max
-      tip << ", 24小时最低价: #{block.minimum_24h}，最高价: #{block.maximun_24h}, 涨幅: #{amplitude(block.minimum_24h,block.maximun_24h)}%"
-    elsif block.yesterday_maximun < market.max
+    tip = ", 24小时最低价: #{block.minimum_24h}，最高价: #{block.maximun_24h}, 涨幅: #{amplitude(block.minimum_24h,block.maximun_24h)}%"
+    if block.yesterday_maximun < market.max
       tip << ", 2天内历史最高价：#{block.yesterday_maximun} 涨幅：#{amplitude(block.yesterday_maximun,market[-1])}%"
     elsif block.three_day_maximun < market.max && block.three_day_maximun < block.yesterday_maximun
       tip << ", 3天内历史最高价：#{block.three_day_maximun} 涨幅：#{amplitude(block.three_day_maximun,market[-1])}%"
@@ -104,11 +102,9 @@ class Api::TickersController < ApplicationController
   end
 
   def fall_tip(block,market)
-    tip = ''
     string = ''
-    if block.minimum_24h == market.min
-      tip << ", 24小时最高价: #{block.maximun_24h}, 最低价: #{block.minimum_24h}, 涨幅: #{amplitude(block.maximun_24h,block.minimum_24h)}%"
-    elsif block.yesterday_minimum > market.min
+    tip = ", 24小时最高价: #{block.maximun_24h}, 最低价: #{block.minimum_24h}, 涨幅: #{amplitude(block.maximun_24h,block.minimum_24h)}%"
+    if block.yesterday_minimum > market.min
       tip << ", 2天内历史最低价： #{block.yesterday_minimum} 跌幅： #{amplitude(block.yesterday_minimum,market.min)}%"
     elsif block.three_day_minimum > market.min && block.three_day_minimum < block.yesterday_minimum
       tip << ", 3天内历史最低价：#{block.yesterday_minimum}  跌幅：#{amplitude(block.three_day_minimum,market.min)}%"
