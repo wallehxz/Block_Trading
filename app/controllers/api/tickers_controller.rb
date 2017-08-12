@@ -60,7 +60,7 @@ class Api::TickersController < ApplicationController
   def sync_local(block,amount)
     balance = Balance.find_by_block(block)
     if balance
-      blance.update_attributes(amount:amount)
+      balance.update_attributes(amount:amount)
     else
       Balance.create(block:block,amount:amount)
     end
