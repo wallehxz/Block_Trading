@@ -10,4 +10,9 @@ class Notice < ApplicationMailer
     mail to: email,subject: "#{order.block.upcase}挂单通知"
   end
 
+  def info_notice(email,msg)
+    @msg = msg
+    mail to: email,subject: "#{Date.current.to_s} 系统通知"
+  end
+
 end
