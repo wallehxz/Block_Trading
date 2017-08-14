@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     get 'last_ticker', to:'tickers#last_ticker'
     get 'sync_balance', to:'tickers#sync_balance'
     get 'market_report', to:'tickers#market_report'
+    get 'report_balance', to:'tickers#report_balance'
   end
 
   devise_for :users

@@ -179,6 +179,15 @@ class Api::TickersController < ApplicationController
     order.save
   end
 
+  def report_balance
+    string = ''
+    Balance.named.each do |item|
+      string << block_worth_statistical(item) rescue ''
+    end
+    Notice.report_balance(Settings.receive_email,string).deliver_now if string.present?
+    render json:{code:200,msg:'report success'}
+  end
+
   private
 
     def amplitude(old_price,new_price)
@@ -191,5 +200,15 @@ class Api::TickersController < ApplicationController
 
     def fall_template(block,last_price,opt)
       "<p style='color:#339966'>〖#{block}〗处于跌涨点，当前价格: #{last_price}#{opt}</p>"
+    end
+
+    def block_worth_statistical(item)
+      color_array = ['#FF9933','#FF6699','#CC66CC','#CC3366','#996666','#6666FF']
+      if item.amount > 1 && item.chain.present?
+        price = item.chain.tickers.last.last_price
+        return "<p style='color:#{color_array[rand(6)]}'>#{item.chain.full_name} 持有数量: #{item.amount}，最新价格: #{price}，价值: ￥#{(item.amount * price).to_i}</p>"
+      else
+        return "<p style='color:#{color_array[rand(6)]}'>〖#{item.block}〗持有数量: #{item.amount}</p>"
+      end
     end
 end

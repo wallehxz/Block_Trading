@@ -1,7 +1,7 @@
 <div style="Margin-left: 20px;Margin-right: 20px;">
   <h2 style="Margin-top: 0;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #e31212;font-size: 26px;line-height: 34px;font-family: Avenir,sans-serif;text-align: center;">
-    <strong><%= @order.block.upcase %><%= @order.maimai %>挂单通知</strong><br>
-    <%= Time.now.strftime('%Y-%m-%d %H:%M')%>
+    <strong>区块链账户余额</strong><br>
+    <span style="color: #000;font-size: 16px;"><%= Time.now.strftime('%Y-%m-%d %H:%M')%></span>
   </h2>
 </div>
 
@@ -10,7 +10,7 @@
 </div>
 
 <div style="Margin-left: 20px;Margin-right: 20px;">
-  <p> 区块链<%= @order.chain.chinese %> <%= @order.block.upcase %> <%= @order.maimai %>挂单成功，单价：<%= @order.price %>，数量：<%= @order.amount %>，总计：<%= @order.consume %></p>
+  <%= raw @msg %>
 </div>
 
 <div style="Margin-left: 20px;Margin-right: 20px;">

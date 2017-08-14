@@ -5,5 +5,7 @@
 # t.datetime "created_at",             null: false
 # t.datetime "updated_at",             null: false
 class Balance < ActiveRecord::Base
+  scope :named, ->{order(block: :asc)}
+  belongs_to :chain, class_name:'Block',primary_key:'english', foreign_key:'block'
 
 end
