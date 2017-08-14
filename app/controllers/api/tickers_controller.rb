@@ -146,7 +146,11 @@ class Api::TickersController < ApplicationController
         end
       end
     elsif balance && balance.amount > 1 && balance.buy_price > market[-1] #持有币时，如果价格低于之前的价格，则追买一部分
-      buy_block(focus,0.1)
+      if balance.buy_price * 0.618 > market[-2] #如果价格跌到止损价时，全部抛出
+        sell_block(focus)
+      else
+        buy_block(focus,0.1)
+      end
     elsif (balance && balance.amount < 1) || balance.nil?
       buy_block(focus,1)
     end
