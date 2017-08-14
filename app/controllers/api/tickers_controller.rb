@@ -142,9 +142,9 @@ class Api::TickersController < ApplicationController
         if focus.block.yesterday_minimum > market[-2]
           if balance.amount < 1
             buy_block(focus,1.15)
-          elsif balance.amount > 1 && balance.buy_price * 0.618 < market[-1]
+          elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.618 < market[-2]
             buy_block(focus,0.15)
-          elsif balance.amount > 1 && balance.buy_price * 0.618 > market[-1]
+          elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.618 > market[-2]
             stop_loss_block(focus)
           end
         end
@@ -155,9 +155,9 @@ class Api::TickersController < ApplicationController
       if balance
         if balance.amount < 1
           buy_block(focus,1)
-        elsif balance.amount > 1 && balance.buy_price * 0.618 < market[-1]
+        elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.618 < market[-2]
           buy_block(focus,0.1)
-        elsif balance.amount > 1 && balance.buy_price * 0.618 > market[-1]
+        elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.618 > market[-2]
           stop_loss_block(focus)
         end
       else
