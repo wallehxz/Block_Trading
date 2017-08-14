@@ -122,16 +122,22 @@ class Api::TickersController < ApplicationController
       short_sell_block(focus,market) if focus.hight_frequency?
     elsif market.min == market[-2] && market[-1] > market[-2]
       short_buy_block(focus,market) if focus.hight_frequency?
+    elsif market.max == market[-1]
+      sell_block(focus,1.15) if focus.hight_frequency?
+    elsif  market.min == market[-1]
+      if focus.hight_frequency? && market.min < focus.block.yesterday_minimum
+        buy_block(focus,0.2) if focus.block.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count == 0
+      end
     end
   end
 
   def short_sell_block(focus,market)
     if focus.block.continuous_rise?
       if focus.block.yesterday_maximun < market[-2]
-        sell_block(focus)
+        sell_block(focus,1.1)
       end
     else
-      sell_block(focus)
+      sell_block(focus,1.075)
     end
   end
 
@@ -142,9 +148,9 @@ class Api::TickersController < ApplicationController
         if focus.block.yesterday_minimum > market[-2]
           if balance.amount < 1
             buy_block(focus,1.15)
-          elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.618 < market[-2]
+          elsif balance.amount > 1 && balance.buy_price > market[-1] && market[-2] > balance.buy_price * 0.75
             buy_block(focus,0.15)
-          elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.618 > market[-2]
+          elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.75 > market[-2]
             stop_loss_block(focus)
           end
         end
@@ -155,9 +161,9 @@ class Api::TickersController < ApplicationController
       if balance
         if balance.amount < 1
           buy_block(focus,1)
-        elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.618 < market[-2]
-          buy_block(focus,0.1)
-        elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.618 > market[-2]
+        elsif balance.amount > 1 && balance.buy_price > market[-1] && market[-2] > yesterday_minimum
+          buy_block(focus,0.1) if focus.block.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count == 0#每天只追买一次
+        elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.75 > market[-2]
           stop_loss_block(focus)
         end
       else
@@ -166,10 +172,10 @@ class Api::TickersController < ApplicationController
     end
   end
 
-  def sell_block(focus)
+  def sell_block(focus,margin)
     sell_price = focus.tickers.last.buy_price
     if balance = focus.block.balance
-      if balance.amount > 1 && sell_price > balance.buy_price
+      if balance.amount > 1 && sell_price >= balance.buy_price * margin
         generate_order(focus.block.english,2,balance.amount.to_i,sell_price)
       end
     end
