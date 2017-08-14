@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     get 'sync_balance', to:'tickers#sync_balance'
     get 'market_report', to:'tickers#market_report'
     get 'report_balance', to:'tickers#report_balance'
+    get 'quotes_analysis', to:'tickers#quotes_analysis'
   end
 
   devise_for :users

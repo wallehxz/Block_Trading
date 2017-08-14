@@ -108,7 +108,7 @@ class Api::TickersController < ApplicationController
 
   def quotes_analysis
     FocusBlock.where(activation:true).each do |item|
-      market_quotes(item) rescue nil
+      market_quotes(item)
     end
   end
 
