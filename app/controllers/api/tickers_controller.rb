@@ -145,7 +145,7 @@ class Api::TickersController < ApplicationController
           elsif balance.amount > 1 && balance.buy_price * 0.618 < market[-1]
             buy_block(focus,0.15)
           elsif balance.amount > 1 && balance.buy_price * 0.618 > market[-1]
-            sell_block(focus)
+            stop_loss_block(focus)
           end
         end
       else
@@ -158,7 +158,7 @@ class Api::TickersController < ApplicationController
         elsif balance.amount > 1 && balance.buy_price * 0.618 < market[-1]
           buy_block(focus,0.1)
         elsif balance.amount > 1 && balance.buy_price * 0.618 > market[-1]
-          sell_block(focus)
+          stop_loss_block(focus)
         end
       else
         buy_block(focus,1)
@@ -178,6 +178,11 @@ class Api::TickersController < ApplicationController
   def buy_block(focus,margin)
     buy_price = focus.tickers.last.sell_price
     generate_order(focus.block.english,1,(focus.total_price / buy_price).to_i * margin,buy_price)
+  end
+
+  def stop_loss_block(focus)
+    sell_price = focus.tickers.last.buy_price
+    generate_order(focus.block.english,2,balance.amount.to_i,sell_price)
   end
 
   def generate_order(block,business,amount,price)
