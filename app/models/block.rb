@@ -23,14 +23,14 @@ class Block < ActiveRecord::Base
   end
 
   def three_day_minimum
-    if self.interval_historical(3).count > 140
+    if self.interval_historical(3).count > 0
       return self.interval_historical(3).map{|x| x.last_price}.min
     end
     return 0
   end
 
   def three_day_maximun
-    if self.interval_historical(3).count > 140
+    if self.interval_historical(3).count > 0
       return self.interval_historical(3).map{|x| x.last_price}.max
     end
     return 0
@@ -51,14 +51,28 @@ class Block < ActiveRecord::Base
   end
 
   def minimum_24h
-    if self.tickers.last(48).count > 40
-      return self.tickers.last(48).map{|x| x.last_price}.min
+    if self.tickers.last(96).count > 0
+      return self.tickers.last(96).map{|x| x.last_price}.min
     end
     return 0
   end
 
   def maximun_24h
-    if self.tickers.last(48).count > 40
+    if self.tickers.last(96).count > 0
+      return self.tickers.last(96).map{|x| x.last_price}.max
+    end
+    return 0
+  end
+
+    def minimum_12h
+    if self.tickers.last(48).count > 0
+      return self.tickers.last(48).map{|x| x.last_price}.min
+    end
+    return 0
+  end
+
+  def maximun_12h
+    if self.tickers.last(48).count > 0
       return self.tickers.last(48).map{|x| x.last_price}.max
     end
     return 0
@@ -68,6 +82,31 @@ class Block < ActiveRecord::Base
     today = Date.current.to_s
     number_day = (Date.current - number.day).to_s
     self.tickers.where('that_date >= ? and that_date < ?',number_day,today)
+  end
+
+  def day_historical(number)
+    number_day = (Date.current - number.day).to_s
+    self.tickers.where('that_date >= ? and that_date <= ?',number_day,number_day)
+  end
+
+  def continuous_decline?
+    one_line = self.day_historical(1).map{|x| x.last_price}.min
+    two_line = self.day_historical(2).map{|x| x.last_price}.min
+    three_line = self.day_historical(3).map{|x| x.last_price}.min
+    if one_line < two_line && two_line < three_line
+      return true
+    end
+    return false
+  end
+
+  def continuous_rise?
+    one_line = self.day_historical(1).map{|x| x.last_price}.max
+    two_line = self.day_historical(2).map{|x| x.last_price}.max
+    three_line = self.day_historical(3).map{|x| x.last_price}.max
+    if one_line > two_line && two_line > three_line
+      return true
+    end
+    return false
   end
 
 end

@@ -20,6 +20,15 @@
       </div>
     </div>
     <div class="form-group has-error">
+      <label>交易频次</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-adjust"></i>
+        </div>
+        <%= f.select(:frequency,[['高频次',1],['低频次',0]], {prompt:'请选择交易频次'},{:class => 'form-control'}) %>
+      </div>
+    </div>
+    <div class="form-group has-error">
       <label>买入数量</label>
       <div class="input-group">
         <div class="input-group-addon">

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170808013602) do
+ActiveRecord::Schema.define(version: 20170814020706) do
 
   create_table "balances", force: :cascade do |t|
     t.string   "block",      limit: 255
@@ -46,8 +46,9 @@ ActiveRecord::Schema.define(version: 20170808013602) do
     t.float    "sell_weights",   limit: 24
     t.float    "sell_amplitude", limit: 24
     t.boolean  "activation"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "frequency",      limit: 4,  default: 0
   end
 
   create_table "pending_orders", force: :cascade do |t|

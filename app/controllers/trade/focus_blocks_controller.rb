@@ -48,6 +48,6 @@ class Trade::FocusBlocksController < Trade::BaseController
 
     def focus_block_params
       params.require(:focus_block).permit(:block_id, :activation, :buy_amount,
-        :total_price, :sell_weights, :sell_amplitude)
+        :total_price, :sell_weights, :sell_amplitude, :frequency)
     end
 end

@@ -24,6 +24,7 @@
               <th tabindex="0" aria-controls="example1" style="text-align: center">总价</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">权重</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">振幅</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">频次</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">状态</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center;width: 240px">操作</th>
             </tr>
@@ -36,6 +37,7 @@
                 <td><%= item.total_price %></td>
                 <td><%= item.sell_weights %></td>
                 <td><%= item.sell_amplitude %></td>
+                <td><%= item.pinci %></td>
                 <td><%= item.zhuangtai %></td>
                 <td>
                   <a href="<%= edit_trade_focus_block_path(item) %>" class="btn bg-orange btn-flat">

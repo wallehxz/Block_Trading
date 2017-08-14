@@ -48,7 +48,7 @@ class PendingOrder < ActiveRecord::Base
   def self.sync_balance(order)
     if order.business == '1'
       if balance = Balance.find_by_block(order.block)
-        balance.update_attributes(buy_price:order.price)
+        balance.update_attributes(buy_price:order.price) if balance.amount < 1
       else
         Balance.create(block:order.block,buy_price:order.price)
       end
@@ -81,10 +81,10 @@ class PendingOrder < ActiveRecord::Base
   end
 
   def self.loop_order_request(bolck,business,price,amount)
-      5.times do |i|
-        tip = PendingOrder.remote_order(bolck,business,price,amount)
-        return tip if tip.include?('succ')
-      end
+    5.times do |i|
+      tip = PendingOrder.remote_order(bolck,business,price,amount)
+      return tip if tip.include?('succ')
+    end
   end
 
 

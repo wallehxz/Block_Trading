@@ -66,12 +66,6 @@ class Api::TickersController < ApplicationController
     end
   end
 
-  def quotes_analysis
-    FocusBlock.where(activation:true).each do |item|
-      market_quotes(item) rescue nil
-    end
-  end
-
   def market_report
     string = ''
     Block.named.each do |item|
@@ -82,7 +76,7 @@ class Api::TickersController < ApplicationController
   end
 
   def block_analysis(block)
-    market = block.tickers.last(12).map {|x| x.last_price}
+    market = block.tickers.last(24).map {|x| x.last_price}
     if market.max == market[-2] && market[-2] > market[-1]
       return rise_tip(block,market) if block.maximun_24h == market.max
     elsif market.min == market[-2] && market[-1] > market[-2]
@@ -112,57 +106,64 @@ class Api::TickersController < ApplicationController
     string << fall_template(block.english,market[-1],tip)
   end
 
+  def quotes_analysis
+    FocusBlock.where(activation:true).each do |item|
+      market_quotes(item) rescue nil
+    end
+  end
+
   def market_quotes(focus)
-    market = focus.tickers.last(12).map {|x| x.last_price}
-    inflection_point(focus,market) if market.size == 12
+    market = focus.tickers.last(24).map {|x| x.last_price}
+    inflection_point(focus,market) if market.size > 0
   end
 
   def inflection_point(focus,market)
     if market.max == market[-2] && market[-2] > market[-1]
-      short_sell_block(focus,market)
+      short_sell_block(focus,market) if hight_frequency?
     elsif market.min == market[-2] && market[-1] > market[-2]
-      short_buy_block(focus,market)
+      short_buy_block(focus,market) if hight_frequency?
     end
   end
 
   def short_sell_block(focus,market)
-    if focus.block.maximun_24h == market[-2]
-      sell_price = focus.tickers.last.buy_price
-      if balance = focus.block.balance
-        if balance.amount > 1 && sell_price > balance.buy_price
-          generate_order(focus.block.english,2,balance.amount.to_i,sell_price)
-        end
+    if focus.block.continuous_rise?
+      if focus.block.yesterday_maximun < market[-2]
+        sell_block(focus)
       end
+    else
+      sell_block(focus)
     end
   end
 
   def short_buy_block(focus,market)
-    if focus.block.minimum_24h == market[-2]
-      buy_price = focus.tickers.last.sell_price
-      balance = focus.block.balance
-      if balance.nil? || (balance && balance.amount < 1)
-        generate_order(focus.block.english,1,(focus.total_price / buy_price).to_i,buy_price)
+    balance = focus.block.balance
+    if focus.block.continuous_decline? && balance
+      if focus.block.yesterday_minimum > market[-2]
+        if balance.amount > 1
+          buy_block(focus,0.15)
+        elsif balance.amount < 1
+          buy_block(focus,1.15)
+        end
       end
+    elsif balance && balance.amount > 1 && balance.buy_price > market[-1] #持有币时，如果价格低于之前的价格，则追买一部分
+      buy_block(focus,0.1)
+    elsif (balance && balance.amount < 1) || balance.nil?
+      buy_block(focus,1)
     end
   end
 
   def sell_block(focus)
     sell_price = focus.tickers.last.buy_price
-    balance = focus.block.balance
-    if balance.amount > 0 && sell_price > (balance.buy_price * focus.sell_amplitude)
-      generate_order(focus.block.english,2,balance.amount * focus.sell_weights,sell_price)
+    if balance = focus.block.balance
+      if balance.amount > 1 && sell_price > balance.buy_price
+        generate_order(focus.block.english,2,balance.amount.to_i,sell_price)
+      end
     end
   end
 
-  def buy_block(focus,market)
+  def buy_block(focus,margin)
     buy_price = focus.tickers.last.sell_price
-    if focus.block.yesterday_minimum > buy_price && focus.block.yesterday_minimum < buy_price
-      generate_order(focus.block.english,1,focus.buy_amount * 0.3,buy_price)
-    elsif focus.block.three_day_minimum > buy_price
-      generate_order(focus.block.english,1,focus.buy_amount * 0.5,buy_price)
-    elsif minimum_24h == market.min
-      generate_order(focus.block.english,1,focus.buy_amount * 0.1,buy_price)
-    end
+    generate_order(focus.block.english,1,(focus.total_price / buy_price).to_i * margin,buy_price)
   end
 
   def generate_order(block,business,amount,price)
