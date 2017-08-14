@@ -90,9 +90,9 @@ class Block < ActiveRecord::Base
   end
 
   def continuous_decline?
-    one_line = self.day_historical(1).map{|x| x.last_price}.min
-    two_line = self.day_historical(2).map{|x| x.last_price}.min
-    three_line = self.day_historical(3).map{|x| x.last_price}.min
+    one_line = self.day_historical(1).map{|x| x.last_price}.min || 0
+    two_line = self.day_historical(2).map{|x| x.last_price}.min || 0
+    three_line = self.day_historical(3).map{|x| x.last_price}.min || 0
     if one_line < two_line && two_line < three_line
       return true
     end
@@ -100,9 +100,9 @@ class Block < ActiveRecord::Base
   end
 
   def continuous_rise?
-    one_line = self.day_historical(1).map{|x| x.last_price}.max
-    two_line = self.day_historical(2).map{|x| x.last_price}.max
-    three_line = self.day_historical(3).map{|x| x.last_price}.max
+    one_line = self.day_historical(1).map{|x| x.last_price}.max || 0
+    two_line = self.day_historical(2).map{|x| x.last_price}.max || 0
+    three_line = self.day_historical(3).map{|x| x.last_price}.max || 0
     if one_line > two_line && two_line > three_line
       return true
     end

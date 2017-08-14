@@ -119,9 +119,9 @@ class Api::TickersController < ApplicationController
 
   def inflection_point(focus,market)
     if market.max == market[-2] && market[-2] > market[-1]
-      short_sell_block(focus,market) if hight_frequency?
+      short_sell_block(focus,market) if focus.hight_frequency?
     elsif market.min == market[-2] && market[-1] > market[-2]
-      short_buy_block(focus,market) if hight_frequency?
+      short_buy_block(focus,market) if focus.hight_frequency?
     end
   end
 
