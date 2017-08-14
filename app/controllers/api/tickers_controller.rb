@@ -137,22 +137,32 @@ class Api::TickersController < ApplicationController
 
   def short_buy_block(focus,market)
     balance = focus.block.balance
-    if focus.block.continuous_decline? && balance
-      if focus.block.yesterday_minimum > market[-2]
-        if balance.amount > 1
-          buy_block(focus,0.15)
-        elsif balance.amount < 1
-          buy_block(focus,1.15)
+    if focus.block.continuous_decline?
+      if balance
+        if focus.block.yesterday_minimum > market[-2]
+          if balance.amount < 1
+            buy_block(focus,1.15)
+          elsif balance.amount > 1 && balance.buy_price * 0.618 < market[-1]
+            buy_block(focus,0.15)
+          elsif balance.amount > 1 && balance.buy_price * 0.618 > market[-1]
+            sell_block(focus)
+          end
         end
-      end
-    elsif balance && balance.amount > 1 && balance.buy_price > market[-1] #持有币时，如果价格低于之前的价格，则追买一部分
-      if balance.buy_price * 0.618 > market[-2] #如果价格跌到止损价时，全部抛出
-        sell_block(focus)
       else
-        buy_block(focus,0.1)
+        buy_block(focus,1.15)
       end
-    elsif (balance && balance.amount < 1) || balance.nil?
-      buy_block(focus,1)
+    else
+      if balance
+        if balance.amount < 1
+          buy_block(focus,1)
+        elsif balance.amount > 1 && balance.buy_price * 0.618 < market[-1]
+          buy_block(focus,0.1)
+        elsif balance.amount > 1 && balance.buy_price * 0.618 > market[-1]
+          sell_block(focus)
+        end
+      else
+        buy_block(focus,1)
+      end
     end
   end
 
