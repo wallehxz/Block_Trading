@@ -149,8 +149,8 @@ class Api::TickersController < ApplicationController
           if balance.amount < 1
             buy_block(focus,1.15)
           elsif balance.amount > 1 && balance.buy_price > market[-1] && market[-2] > balance.buy_price * 0.75
-            buy_block(focus,0.15)
-          elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.75 > market[-2]
+            buy_block(focus,0.15) if focus.block.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count == 0 #每天只追买一次
+          elsif balance.amount > 1 && balance.buy_price > market[-1] && market[-2] < balance.buy_price * 0.75
             stop_loss_block(focus)
           end
         end
@@ -162,8 +162,8 @@ class Api::TickersController < ApplicationController
         if balance.amount < 1
           buy_block(focus,1)
         elsif balance.amount > 1 && balance.buy_price > market[-1] && market[-2] > yesterday_minimum
-          buy_block(focus,0.1) if focus.block.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count == 0#每天只追买一次
-        elsif balance.amount > 1 && balance.buy_price > market[-1] && balance.buy_price * 0.75 > market[-2]
+          buy_block(focus,0.1) if focus.block.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count == 0 #每天只追买一次
+        elsif balance.amount > 1 && balance.buy_price > market[-1] &&  market[-2] < balance.buy_price * 0.75
           stop_loss_block(focus)
         end
       else
