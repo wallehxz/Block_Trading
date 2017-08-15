@@ -8,7 +8,7 @@ class Api::TickersController < ApplicationController
       end
     end
     quotes_analysis
-    market_report
+    focus_extremum_report
   end
 
   def get_all_ticker
@@ -72,7 +72,7 @@ class Api::TickersController < ApplicationController
       string << block_analysis(item) rescue ''
     end
     Notice.market_report(Settings.receive_email,string).deliver_now if string.present?
-    render json:{code:200,msg:'report success'}
+    render json:{code:200,msg:'market report success'}
   end
 
   def block_analysis(block)
@@ -206,7 +206,25 @@ class Api::TickersController < ApplicationController
       string << block_worth_statistical(item) rescue ''
     end
     Notice.report_balance(Settings.receive_email,string).deliver_now if string.present?
-    render json:{code:200,msg:'report success'}
+    render json:{code:200,msg:'balance report success'}
+  end
+
+  def focus_extremum_report
+    string = ''
+    FocusBlock.where(activation:true).each do |item|
+      string << focus_block_analysis(item.block) rescue ''
+    end
+    Notice.focus_report(Settings.receive_email,string).deliver_now if string.present?
+    render json:{code:200,msg:'focus report success'}
+  end
+
+  def focus_block_analysis(block)
+    quotes = block.tickers.last(96).map{|x| x.last_price}
+    if quotes.max == quotes[-1]
+      return hight_point_template(block)
+    elsif quotes.min == quotes[-1]
+      return low_point_template(block)
+    end
   end
 
   private
@@ -221,6 +239,14 @@ class Api::TickersController < ApplicationController
 
     def fall_template(block,last_price,opt)
       "<p style='color:#339966'>〖#{block}〗处于跌涨点，当前价格: #{last_price}#{opt}</p>"
+    end
+
+    def hight_point_template(block)
+      "<p style='color:#CC0066'>#{block.full_name} 处于最高价值点，当前价格: #{block.tickers.last.last_price}#{', 历史三天连续上涨' if block.ifcontinuous_rise?}#{', 历史三天连续下跌' if block.continuous_decline?}</p>"
+    end
+
+    def low_point_template(block)
+      "<p style='color:#339966'>#{blockfull_name} 处于最低价值点，当前价格: #{block.tickers.last.last_price}#{', 历史三天连续上涨' if block.ifcontinuous_rise?}#{', 历史三天连续下跌' if block.continuous_decline?}</p>"
     end
 
     def block_worth_statistical(item)
