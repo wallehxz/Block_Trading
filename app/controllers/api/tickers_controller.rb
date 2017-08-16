@@ -134,10 +134,10 @@ class Api::TickersController < ApplicationController
   def short_sell_block(focus,market)
     if focus.block.continuous_rise?
       if focus.block.yesterday_maximun < market[-2]
-        sell_block(focus,1.1)
+        sell_block(focus,1.15)
       end
     else
-      sell_block(focus,1.075)
+      sell_block(focus,1.0618)
     end
   end
 

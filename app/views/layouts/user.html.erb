@@ -11,9 +11,10 @@
 <body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-logo">
-      <a href="/"><b>Block</b></a>
+      <a href="/" style="text-decoration: none;"><b>Block</b></a>
     </div>
     <div class="login-box-body">
+      <%= render :partial=>'layouts/lte/flash_msg' %>
       <%= yield %>
     </div>
   </div>

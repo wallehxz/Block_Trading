@@ -1,8 +1,14 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   layout 'user'
+  before_action :invitation, only: :create
 # before_filter :configure_sign_up_params, only: [:create]
 # before_filter :configure_account_update_params, only: [:update]
-
+  def invitation
+    if params[:code] != 'jiubugaosuni'
+      flash[:notice] = '请填写正确的邀请码'
+      redirect_to sign_up_path
+    end
+  end
   #GET /resource/sign_up
   def new
     super
