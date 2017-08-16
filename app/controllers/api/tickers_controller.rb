@@ -118,16 +118,18 @@ class Api::TickersController < ApplicationController
   end
 
   def inflection_point(focus,market)
+    hight_frequency(focus,market) if focus.hight_frequency?
+  end
+
+  def hight_frequency(focus,market)
     if market.max == market[-2] && market[-2] > market[-1]
-      short_sell_block(focus,market) if focus.hight_frequency?
+      short_sell_block(focus,market)
     elsif market.min == market[-2] && market[-1] > market[-2]
-      short_buy_block(focus,market) if focus.hight_frequency?
+      short_buy_block(focus,market)
     elsif market.max == market[-1]
-      sell_block(focus,1.15) if focus.hight_frequency?
-    elsif  market.min == market[-1]
-      if focus.hight_frequency? && market.min < focus.block.yesterday_minimum
-        buy_block(focus,0.2) if focus.block.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count == 0
-      end
+      sell_block(focus,1.15)
+    elsif  market.min == market[-1] && market.min < focus.block.yesterday_minimum
+      buy_block(focus,0.2) if focus.block.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count == 0
     end
   end
 
@@ -147,7 +149,7 @@ class Api::TickersController < ApplicationController
       if balance
         if focus.block.yesterday_minimum > market[-2]
           if balance.amount < 1
-            buy_block(focus,1.15)
+            buy_block(focus,1.1)
           elsif balance.amount > 1 && balance.buy_price > market[-1] && market[-2] > balance.buy_price * 0.75
             buy_block(focus,0.15) if focus.block.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count == 0 #每天只追买一次
           elsif balance.amount > 1 && balance.buy_price > market[-1] && market[-2] < balance.buy_price * 0.75
@@ -155,7 +157,7 @@ class Api::TickersController < ApplicationController
           end
         end
       else
-        buy_block(focus,1.15)
+        buy_block(focus,0.618) if market[-1] < focus.block.three_day_minimum
       end
     else
       if balance
@@ -219,7 +221,7 @@ class Api::TickersController < ApplicationController
   end
 
   def focus_block_analysis(block)
-    quotes = block.tickers.last(96).map{|x| x.last_price}
+    quotes = block.tickers.last(96).map{ |x| x.last_price }
     if quotes.max == quotes[-1]
       return hight_point_template(block)
     elsif quotes.min == quotes[-1]
@@ -254,7 +256,7 @@ class Api::TickersController < ApplicationController
       if item.amount > 1 && item.chain.present?
         price = item.chain.tickers.last.last_price
         return "<p style='color:#{color_array[rand(6)]}'>#{item.chain.full_name} 持有数量: #{item.amount}，最新价格: #{price}，价值: ￥#{(item.amount * price).to_i}</p>"
-      else
+      elsif item.block == 'cny'
         return "<p style='color:#{color_array[rand(6)]}'>〖#{item.block}〗持有数量: #{item.amount}</p>"
       end
     end
