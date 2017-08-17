@@ -49,6 +49,7 @@ class PendingOrder < ActiveRecord::Base
     if order.business == '1'
       if balance = Balance.find_by_block(order.block)
         balance.update_attributes(buy_price:order.price) if balance.amount < 1
+        balance.update_attributes(buy_price:order.price) if balance.amount > 1 && balance.buy_price < order.price
       else
         Balance.create(block:order.block,buy_price:order.price)
       end

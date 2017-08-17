@@ -14,8 +14,8 @@ class Block < ActiveRecord::Base
   scope :named, ->{order(english: :asc)}
 
   def self.generate_md5(time)
-      sign_string = "#{Settings.btc_key}_#{Settings.btc_id}_#{Settings.btc_secret}_#{time}"
-      sign = Digest::MD5.hexdigest(sign_string)
+    sign_string = "#{Settings.btc_key}_#{Settings.btc_id}_#{Settings.btc_secret}_#{time}"
+    sign = Digest::MD5.hexdigest(sign_string)
   end
 
   def full_name
@@ -64,7 +64,7 @@ class Block < ActiveRecord::Base
     return 0
   end
 
-    def minimum_12h
+  def minimum_12h
     if self.tickers.last(48).count > 0
       return self.tickers.last(48).map{|x| x.last_price}.min
     end
@@ -89,6 +89,10 @@ class Block < ActiveRecord::Base
     self.tickers.where('that_date >= ? and that_date <= ?',number_day,number_day)
   end
 
+  def ma5_quotes
+    self.tickers.last(5).map {|x| x.last_price }.sum / 5
+  end
+
   def continuous_decline?
     one_line = self.day_historical(1).map{|x| x.last_price}.min || 0
     two_line = self.day_historical(2).map{|x| x.last_price}.min || 0
@@ -107,6 +111,21 @@ class Block < ActiveRecord::Base
       return true
     end
     return false
+  end
+
+  def today_had_buy?
+    return true if self.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count > 0
+    false
+  end
+
+  def today_had_buy_count(sum_count)?
+    return true if self.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count > sum_count
+    false
+  end
+
+  def today_buy_interval(interval)
+    return true if (Time.now - self.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').last.created_at) > interval.hours
+    false
   end
 
 end

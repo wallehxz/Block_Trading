@@ -338,6 +338,7 @@ DEPENDENCIES
   minitest (= 5.8.4)
   mocha (= 1.1.0)
   mysql2 (= 0.4.5)
+  nokogiri (= 1.8.0)
   pry-byebug (= 3.3.0)
   pry-rails (= 0.3.4)
   puma (= 3.6.0)

@@ -19,6 +19,7 @@ gem 'puma', '3.6.0' #Server
 gem 'bcrypt', '3.1.10'# Use ActiveModel has_secure_password
 gem 'cancancan', '1.15.0' # User authorization
 gem 'devise','3.4.0' # User authentication
+gem 'nokogiri', '1.8.0' # HTML 解析
 
 group :development do
   gem 'spring', '2.0.0' # bin/bundle exec spring binstub --all
