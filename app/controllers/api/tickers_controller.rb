@@ -122,49 +122,63 @@ class Api::TickersController < ApplicationController
   end
 
   def hight_frequency(focus,market)
-    balance = focus.block.balance
     if focus.block.continuous_rise? #牛市
-      if market[-2] > market[-1] && market[-1] < focus.block.ma5_quotes && focus.block.ma5_quotes && market[-2] > (market[-6..-2].sum / 5)#下跌至 ma5 线，抛出一部分
-        if balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.0618
-          sell_part_block(focus,0.25)
-        elsif balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.15
-          sell_part_block(focus,0.5)
-        end
-      elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #牛市涨至突破ma5，持有部分
-        buy_block(focus,0.3) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.3 的量
-        buy_block(focus,0.2) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3)? && focus.block.today_buy_interval(6) #如果当天已买过，最多买三次则购买 0.1 的量, 且间隔大于6小时
-      elsif balance && market[-1] > balance.buy_price * 1.2 && balance.amount > 1
-        sell_part_block(focus,0.618)
-      end
+      rise_quotes(focus,market)
     elsif focus.block.continuous_decline? #熊市
-      if market[-1] < focus.block.yesterday_minimum
-        if balance && market[-1] > balance.buy_price * 0.75 && balance.amount > 1
-          buy_block(focus,0.2) if !focus.block.today_had_buy? #如果当天未买过,则购买0.2的量
-        elsif balance && market[-1] < balance.buy_price * 0.75
-          stop_loss_block(focus) if balance.amount > 1
-          buy_block(focus,0.3) if balance.amount < 1 && !focus.block.today_had_buy? #无论是否连续跌，都只卖一次
-        elsif balance.nil?
-          buy_block(focus,0.3)
-        end
-      elsif market[-1] > focus.block.balance.buy_price * 1.0618 #如果反弹上涨，则先抛出
-        sell_part_block(focus,1)
-      end
+      decline_quotes(focus,market)
     else
-      if market[-2] > market[-1] && market[-1] < focus.block.ma5_quotes && focus.block.ma5_quotes && market[-2] > (market[-6..-2].sum / 5) #日常至 ma5 线，抛出一部分
-        if balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.05
-          sell_part_block(focus,0.2)
-        elsif balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.0618
-          sell_part_block(focus,0.25)
-        end
-      elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #日常涨至突破ma5，持有部分
-        if balance && balance.amount > 1
-          buy_block(focus,0.2) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.2 的量
-          buy_block(focus,0.1) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3)? #如果当天已买过，最多买两次则购买 0.1 的量
-        elsif balance && balance.amount < 1
-          buy_block(focus,0.3)
-        elsif balance.nil?
-          buy_block(focus,0.3)
-        end
+      normal_quotes(focus,market)
+    end
+  end
+
+  def rise_quotes(focus,market)
+    balance = focus.block.balance
+    if market[-2] > market[-1] && market[-1] < focus.block.ma5_quotes && focus.block.ma5_quotes && market[-2] > (market[-6..-2].sum / 5)#下跌至 ma5 线，抛出一部分
+      if balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.0618
+        sell_part_block(focus,0.25)
+      elsif balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.15
+        sell_part_block(focus,0.5)
+      end
+    elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #牛市涨至突破ma5，持有部分
+      buy_block(focus,0.3) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.3 的量
+      buy_block(focus,0.2) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3)? && focus.block.today_buy_interval(6) #如果当天已买过，最多买三次则购买 0.1 的量, 且间隔大于6小时
+    elsif balance && market[-1] > balance.buy_price * 1.2 && balance.amount > 1
+      sell_part_block(focus,0.618)
+    end
+  end
+
+  def decline_quotes(focus,market)
+    balance = focus.block.balance
+    if market[-1] < focus.block.yesterday_minimum
+      if balance && market[-1] > balance.buy_price * 0.75 && balance.amount > 1
+        buy_block(focus,0.2) if !focus.block.today_had_buy? #如果当天未买过,则购买0.2的量
+      elsif balance && market[-1] < balance.buy_price * 0.75
+        stop_loss_block(focus) if balance.amount > 1
+        buy_block(focus,0.3) if balance.amount < 1 && !focus.block.today_had_buy? #无论是否连续跌，都只卖一次
+      elsif balance.nil?
+        buy_block(focus,0.3)
+      end
+    elsif market[-1] > focus.block.balance.buy_price * 1.0618 #如果反弹上涨，则先抛出
+      sell_part_block(focus,1)
+    end
+  end
+
+  def normal_quotes(focus,market)
+    balance = focus.block.balance
+    if market[-2] > market[-1] && market[-1] < focus.block.ma5_quotes && focus.block.ma5_quotes && market[-2] > (market[-6..-2].sum / 5) #日常至 ma5 线，抛出一部分
+      if balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.05
+        sell_part_block(focus,0.2)
+      elsif balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.0618
+        sell_part_block(focus,0.25)
+      end
+    elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #日常涨至突破ma5，持有部分
+      if balance && balance.amount > 1
+        buy_block(focus,0.2) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.2 的量
+        buy_block(focus,0.1) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3)? #如果当天已买过，最多买两次则购买 0.1 的量
+      elsif balance && balance.amount < 1
+        buy_block(focus,0.3)
+      elsif balance.nil?
+        buy_block(focus,0.3)
       end
     end
   end
