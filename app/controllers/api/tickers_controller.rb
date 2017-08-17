@@ -141,7 +141,7 @@ class Api::TickersController < ApplicationController
       end
     elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #牛市涨至突破ma5，持有部分
       buy_block(focus,0.3) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.3 的量
-      buy_block(focus,0.2) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3)? && focus.block.today_buy_interval(6) #如果当天已买过，最多买三次则购买 0.1 的量, 且间隔大于6小时
+      buy_block(focus,0.2) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3) && focus.block.today_buy_interval(6) #如果当天已买过，最多买三次则购买 0.1 的量, 且间隔大于6小时
     elsif balance && market[-1] > balance.buy_price * 1.2 && balance.amount > 1
       sell_part_block(focus,0.618)
     end
@@ -174,7 +174,7 @@ class Api::TickersController < ApplicationController
     elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #日常涨至突破ma5，持有部分
       if balance && balance.amount > 1
         buy_block(focus,0.2) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.2 的量
-        buy_block(focus,0.1) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3)? #如果当天已买过，最多买两次则购买 0.1 的量
+        buy_block(focus,0.1) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3) #如果当天已买过，最多买两次则购买 0.1 的量
       elsif balance && balance.amount < 1
         buy_block(focus,0.3)
       elsif balance.nil?

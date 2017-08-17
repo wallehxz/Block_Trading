@@ -118,7 +118,7 @@ class Block < ActiveRecord::Base
     false
   end
 
-  def today_had_buy_count(sum_count)?
+  def today_had_buy_count(sum_count)
     return true if self.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count > sum_count
     false
   end
