@@ -2,7 +2,7 @@ class Trade::BalancesController < Trade::BaseController
   before_action :set_balance, only: [:edit, :update, :destroy]
   # skip_before_filter :verify_authenticity_token
   def index
-    @balances = Balance.paginate(page:params[:page])
+    @balances = Balance.quantity.paginate(page:params[:page])
   end
 
   def edit
