@@ -5,7 +5,11 @@ Rails.application.routes.draw do
     resources :blocks do
       resources :block_tickers
     end
-    resources :focus_blocks
+    resources :focus_blocks do
+      member do
+        get 'change_state'
+      end
+    end
     resources :balances
     resources :pending_orders
   end

@@ -1,5 +1,5 @@
 class Trade::FocusBlocksController < Trade::BaseController
-  before_action :set_focus, only: [:edit, :update, :destroy]
+  before_action :set_focus, only: [:edit, :update, :destroy, :change_state]
   def index
     @focus = FocusBlock.all.paginate(page:params[:page])
   end
@@ -35,6 +35,17 @@ class Trade::FocusBlocksController < Trade::BaseController
     @focus.destroy
     flash[:notice] = "关注区块删除成功"
     redirect_to :back
+  end
+
+  def change_state
+    if @focus.activation
+      @focus.activation = false
+      @focus.save
+    else
+      @focus.activation = true
+      @focus.save
+    end
+    render json:{code:200}
   end
 
   private

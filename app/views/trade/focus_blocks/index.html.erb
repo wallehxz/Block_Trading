@@ -25,8 +25,8 @@
               <th tabindex="0" aria-controls="example1" style="text-align: center">权重</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">振幅</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">频次</th>
-              <th tabindex="0" aria-controls="example1" style="text-align: center">状态</th>
-              <th tabindex="0" aria-controls="example1" style="text-align: center;width: 240px">操作</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center;width: 164px">状态</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center;width: 165px">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -38,7 +38,9 @@
                 <td><%= item.sell_weights %></td>
                 <td><%= item.sell_amplitude %></td>
                 <td><%= item.pinci %></td>
-                <td><%= item.zhuangtai %></td>
+                <td>
+                  <input type="checkbox" name="my-checkbox" <%= 'checked' if item.activation %> onchange='switch_state(<%= item.id %>)'>
+                </td>
                 <td>
                   <a href="<%= edit_trade_focus_block_path(item) %>" class="btn bg-orange btn-flat">
                     <i class="glyphicon glyphicon-edit"></i>
@@ -68,3 +70,11 @@
     </div>
   </div>
 </section>
+<% content_for :script_footer do %>
+  <script type="text/javascript">
+    function switch_state(item) {
+      $.get('/trade/focus_blocks/' + item +'/change_state');
+    }
+    $("[name='my-checkbox']").bootstrapSwitch({onColor:'success',offColor:'danger'});
+  </script>
+<% end %>

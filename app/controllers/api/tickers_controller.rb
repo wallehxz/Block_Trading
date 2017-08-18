@@ -139,7 +139,7 @@ class Api::TickersController < ApplicationController
       elsif balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.15
         sell_part_block(focus,0.5)
       end
-    elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #牛市涨至突破ma5，持有部分
+    elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) && balance.amount * balance.buy_price < focus.total_price * 1.5 #牛市涨至突破ma5，持有部分
       buy_block(focus,0.3) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.3 的量
       buy_block(focus,0.2) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3) && focus.block.today_buy_interval(6) #如果当天已买过，最多买三次则购买 0.1 的量, 且间隔大于6小时
     elsif balance && market[-1] > balance.buy_price * 1.2 && balance.amount > 1
@@ -150,11 +150,11 @@ class Api::TickersController < ApplicationController
   def decline_quotes(focus,market)
     balance = focus.block.balance
     if market[-1] < focus.block.yesterday_minimum
-      if balance && market[-1] > balance.buy_price * 0.75 && balance.amount > 1
+      if balance && market[-1] > balance.buy_price * 0.75 && balance.amount > 1 && balance.amount * balance.buy_price < focus.total_price * 1.5
         buy_block(focus,0.2) if !focus.block.today_had_buy? #如果当天未买过,则购买0.2的量
       elsif balance && market[-1] < balance.buy_price * 0.75
         stop_loss_block(focus) if balance.amount > 1
-        buy_block(focus,0.3) if balance.amount < 1 && !focus.block.today_had_buy? #无论是否连续跌，都只卖一次
+        buy_block(focus,0.3) if balance.amount < 1 && !focus.block.today_had_buy? #无论是否连续跌，都只买一次
       elsif balance.nil?
         buy_block(focus,0.3)
       end
@@ -172,7 +172,7 @@ class Api::TickersController < ApplicationController
         sell_part_block(focus,0.25)
       end
     elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #日常涨至突破ma5，持有部分
-      if balance && balance.amount > 1
+      if balance && balance.amount > 1 && balance.amount * balance.buy_price < focus.total_price * 1.5 #买入的数量总价值不大于设定值的1.5倍
         buy_block(focus,0.2) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.2 的量
         buy_block(focus,0.1) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(3) #如果当天已买过，最多买两次则购买 0.1 的量
       elsif balance && balance.amount < 1
