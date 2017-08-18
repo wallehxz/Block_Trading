@@ -1,6 +1,5 @@
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require jquery-2.2.3.min
 //= require lte/js/jquery-ui.min
 //= require lte/js/bootstrap.min
