@@ -195,7 +195,7 @@ class Api::TickersController < ApplicationController
   def sell_part_block(focus,part)
     sell_price = focus.tickers.last.buy_price
     if balance = focus.block.balance
-      if balance.amount > 1 && sell_price > balance.buy_price
+      if balance.amount > 1 && sell_price > balance.buy_price * 1.033
         generate_order(focus.block.english,2,(balance.amount * part).to_i,sell_price)
       end
     end
