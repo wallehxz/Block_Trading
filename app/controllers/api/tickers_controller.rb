@@ -239,7 +239,7 @@ class Api::TickersController < ApplicationController
   end
 
   def focus_block_analysis(block)
-    quotes = block.tickers.last(96).map{ |x| x.last_price }
+    quotes = block.tickers.last(24).map{ |x| x.last_price }
     if quotes.max == quotes[-1]
       return hight_point_template(block)
     elsif quotes.min == quotes[-1]
