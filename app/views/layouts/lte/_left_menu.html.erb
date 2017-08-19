@@ -26,14 +26,16 @@
     </li>
     <li class="treeview <%= 'active' if controller_name == 'blocks' %>">
       <a href="<%= trade_blocks_path %>" target="_self">
-        <i class="fa fa-btc"></i> <span> 区块链表</span>
+        <i class="fa fa-btc"></i> <span> 区块货币</span>
       </a>
     </li>
+    <% if controller_name=='block_tickers' %>
     <li class="treeview <%= 'active' if controller_name=='block_tickers' %>">
-      <a href="#" target="_self">
+      <a href="<%= trade_block_block_tickers_path(params[:block_id]) %>" target="_self">
         <i class="fa fa-area-chart"></i> <span> 价格行情</span>
       </a>
     </li>
+    <% end %>
     <li class="treeview <%= 'active' if controller_name=='focus_blocks' %>">
       <a href="<%= trade_focus_blocks_path %>" target="_self">
         <i class="fa fa-heartbeat"></i> <span>  关注区块</span>
@@ -54,10 +56,12 @@
         <i class="fa fa-balance-scale"></i> <span> 区块差价</span>
       </a>
     </li>
-    <li class="treeview <%= 'active' if controller_name =='partity_sources' %>">
-      <a href="#" target="_self">
-        <i class="fa fa-gift"></i> <span> 价格来源</span>
-      </a>
-    </li>
+    <% if controller_name == 'partity_sources' %>
+      <li class="treeview <%= 'active' if controller_name =='partity_sources' %>">
+        <a href="<%= trade_block_parity_partity_sources_path(params[:block_parity_id]) %>" target="_self">
+          <i class="fa fa-gift"></i> <span> 价格来源</span>
+        </a>
+      </li>
+    <% end %>
   </ul>
 </section>
