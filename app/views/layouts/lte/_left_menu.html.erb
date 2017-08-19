@@ -19,39 +19,44 @@
   </form>
   <ul class="sidebar-menu">
     <li class="header">交易中心</li>
-    <li class="treeview <% if controller_name=='dashboard' %>active<% end %>">
+    <li class="treeview <%= 'active' if controller_name == 'dashboard' %>">
       <a href="<%= trade_root_path %>" target="_self">
         <i class="fa fa-dashboard"></i> <span> 区块趋势</span>
       </a>
     </li>
-    <li class="treeview <% if controller_name=='blocks' %>active<% end %>">
+    <li class="treeview <%= 'active' if controller_name == 'blocks' %>">
       <a href="<%= trade_blocks_path %>" target="_self">
         <i class="fa fa-btc"></i> <span> 区块链表</span>
       </a>
     </li>
-    <li class="treeview <% if controller_name=='block_tickers' %>active<% end %>">
+    <li class="treeview <%= 'active' if controller_name=='block_tickers' %>">
       <a href="#" target="_self">
         <i class="fa fa-area-chart"></i> <span> 价格行情</span>
       </a>
     </li>
-    <li class="treeview <% if controller_name=='focus_block' %>active<% end %>">
+    <li class="treeview <%= 'active' if controller_name=='focus_blocks' %>">
       <a href="<%= trade_focus_blocks_path %>" target="_self">
         <i class="fa fa-heartbeat"></i> <span>  关注区块</span>
       </a>
     </li>
-    <li class="treeview <% if controller_name=='pending_orders' %>active<% end %>">
+    <li class="treeview <%= 'active' if controller_name=='pending_orders' %>">
       <a href="<%= trade_pending_orders_path %>" target="_self">
         <i class="fa fa-cny"></i> <span> 买卖挂单</span>
       </a>
     </li>
-    <li class="treeview <% if controller_name=='balances' %>active<% end %>">
+    <li class="treeview <%= 'active' if controller_name=='balances' %>">
       <a href="<%= trade_balances_path %>" target="_self">
         <i class="fa fa-credit-card"></i> <span> 区块余额</span>
       </a>
     </li>
-    <li class="treeview <% if controller_name=='block_parities' || 'partity_sources' %>active<% end %>">
+    <li class="treeview <%= 'active' if controller_name =='block_parities'%>">
       <a href="<%= trade_block_parities_path %>" target="_self">
         <i class="fa fa-balance-scale"></i> <span> 区块差价</span>
+      </a>
+    </li>
+    <li class="treeview <%= 'active' if controller_name =='partity_sources' %>">
+      <a href="#" target="_self">
+        <i class="fa fa-gift"></i> <span> 价格来源</span>
       </a>
     </li>
   </ul>
