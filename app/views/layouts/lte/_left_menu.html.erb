@@ -49,5 +49,10 @@
         <i class="fa fa-credit-card"></i> <span> 区块余额</span>
       </a>
     </li>
+    <li class="treeview <% if controller_name=='block_parities' || 'partity_sources' %>active<% end %>">
+      <a href="<%= trade_block_parities_path %>" target="_self">
+        <i class="fa fa-balance-scale"></i> <span> 区块差价</span>
+      </a>
+    </li>
   </ul>
 </section>

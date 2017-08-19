@@ -9,9 +9,6 @@ class Trade::BlocksController < Trade::BaseController
     @block = Block.new
   end
 
-  def edit
-  end
-
   def create
     @block = Block.new(block_params)
     if @block.save
@@ -20,6 +17,10 @@ class Trade::BlocksController < Trade::BaseController
       flash[:warn] = "请完善表单信息"
       render :new
     end
+  end
+
+
+  def edit
   end
 
   def update

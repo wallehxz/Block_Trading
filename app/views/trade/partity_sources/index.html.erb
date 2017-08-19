@@ -1,0 +1,64 @@
+<%= content_for(:title, @block.block + '价格来源列表 | BLOCK') %>
+<section class="content-header">
+  <h1>
+    「<%= @block.block %> 」<small>价格来源</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-btc"></i> Dashboard</a></li>
+    <li class="active"><i class="fa fa-btc"></i> 价格行情</li>
+  </ol>
+</section>
+<section class="content">
+  <div class="box box-primary">
+    <div class="box-header">
+      <a href="<%= new_trade_block_parity_partity_source_path(@block) %>" class="btn bg-primary btn-flat"><i class="ion-plus"></i> 添加来源</a>
+    </div>
+    <div class="box-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+            <thead>
+            <tr>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">平台</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">买价</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">链接</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">更新</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center;width: 163px">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @sources.each do |item| %>
+              <tr style="text-align: center">
+                <td><%= item.platform %></td>
+                <td><%= item.last_price %></td>
+                <td><%= item.ticker_url %></td>
+                <td><%= item.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
+                <td>
+                  <a href="<%= edit_trade_block_parity_partity_source_path(@block,item) %>" class="btn bg-orange btn-flat">
+                    <i class="glyphicon glyphicon-edit"></i>
+                    编辑
+                  </a>
+                  <a href="<%= trade_block_parity_partity_source_path(@block,item) %>" class="btn bg-red btn-flat" data-method="delete" data-confirm="确定删除价格来源吗？">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    删除
+                  </a>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="dataTables_info" id="example1_info" role="status" aria-live="polite"><h5>总计：「<%= @sources.count %>」来源</h5></div>
+        </div>
+        <div class="col-sm-12">
+          <div class="dataTables_paginate paging_simple_numbers">
+           <%= will_paginate @sources, :class=>'apple_pagination' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -11,13 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170814020706) do
+ActiveRecord::Schema.define(version: 20170819095437) do
 
   create_table "balances", force: :cascade do |t|
     t.string   "block",      limit: 255
     t.float    "amount",     limit: 24
     t.float    "buy_price",  limit: 24
     t.float    "sell_price", limit: 24
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "block_parities", force: :cascade do |t|
+    t.string   "block",      limit: 255
+    t.float    "agio_rate",  limit: 24
+    t.float    "agio_price", limit: 24
+    t.boolean  "state"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
@@ -49,6 +58,16 @@ ActiveRecord::Schema.define(version: 20170814020706) do
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
     t.integer  "frequency",      limit: 4,  default: 0
+  end
+
+  create_table "partity_sources", force: :cascade do |t|
+    t.integer  "block_parity_id", limit: 4
+    t.string   "platform",        limit: 255
+    t.string   "ticker_url",      limit: 255
+    t.string   "css_anchor",      limit: 255
+    t.float    "last_price",      limit: 24
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "pending_orders", force: :cascade do |t|

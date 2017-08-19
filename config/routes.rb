@@ -12,6 +12,12 @@ Rails.application.routes.draw do
     end
     resources :balances
     resources :pending_orders
+    resources :block_parities do
+      resources :partity_sources
+      member do
+        get 'change_state'
+      end
+    end
   end
   namespace :api do
     get 'last_ticker', to:'tickers#last_ticker'
@@ -19,6 +25,7 @@ Rails.application.routes.draw do
     get 'market_report', to:'tickers#market_report'
     get 'report_balance', to:'tickers#report_balance'
     get 'quotes_analysis', to:'tickers#quotes_analysis'
+    get 'last_parity', to:'parities#last_parity'
   end
 
   devise_for :users

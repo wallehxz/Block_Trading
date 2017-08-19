@@ -2,4 +2,4 @@
 
 实时爬 sosobtc 价格
 
-Nokogiri::HTML(open("https://k.sosobtc.com/eos_yunbi.html")).at_css("div#price").children.text
+Nokogiri::HTML(open("https://www.lhang.com/fullScreen.html?t=ven_cny")).at_css("div#price").children.text
