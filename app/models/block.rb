@@ -51,27 +51,13 @@ class Block < ActiveRecord::Base
   end
 
   def minimum_24h
-    if self.tickers.last(96).count > 0
-      return self.tickers.last(96).map{|x| x.last_price}.min
-    end
-    return 0
-  end
-
-  def maximun_24h
-    if self.tickers.last(96).count > 0
-      return self.tickers.last(96).map{|x| x.last_price}.max
-    end
-    return 0
-  end
-
-  def minimum_12h
     if self.tickers.last(48).count > 0
       return self.tickers.last(48).map{|x| x.last_price}.min
     end
     return 0
   end
 
-  def maximun_12h
+  def maximun_24h
     if self.tickers.last(48).count > 0
       return self.tickers.last(48).map{|x| x.last_price}.max
     end
@@ -94,22 +80,20 @@ class Block < ActiveRecord::Base
   end
 
   def continuous_decline?
-    one_line = self.day_historical(1).map{|x| x.last_price}.min || 0
-    two_line = self.day_historical(2).map{|x| x.last_price}.min || 0
-    three_line = self.day_historical(3).map{|x| x.last_price}.min || 0
-    if one_line < two_line && two_line < three_line
-      return true
-    end
+    one_line_max = self.day_historical(1).map{|x| x.last_price}.max || 0
+    two_line_max = self.day_historical(2).map{|x| x.last_price}.max || 0
+    one_line_min = self.day_historical(1).map{|x| x.last_price}.min || 0
+    two_line_min = self.day_historical(2).map{|x| x.last_price}.min || 0
+    return true if two_line_max > one_line_max && two_line_min > one_line_min
     return false
   end
 
   def continuous_rise?
-    one_line = self.day_historical(1).map{|x| x.last_price}.max || 0
-    two_line = self.day_historical(2).map{|x| x.last_price}.max || 0
-    three_line = self.day_historical(3).map{|x| x.last_price}.max || 0
-    if one_line > two_line && two_line > three_line
-      return true
-    end
+    one_line_max = self.day_historical(1).map{|x| x.last_price}.max || 0
+    two_line_max = self.day_historical(2).map{|x| x.last_price}.max || 0
+    one_line_min = self.day_historical(1).map{|x| x.last_price}.min || 0
+    two_line_min = self.day_historical(2).map{|x| x.last_price}.min || 0
+    return true if one_line_max > two_line_max && one_line_min > two_line_min
     return false
   end
 
@@ -119,7 +103,7 @@ class Block < ActiveRecord::Base
   end
 
   def today_had_buy_count(sum_count)
-    return true if self.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count > sum_count
+    return true if self.orders.where("created_at >= ? and business = ?",Time.now.beginning_of_day,'1').count >= sum_count
     false
   end
 
