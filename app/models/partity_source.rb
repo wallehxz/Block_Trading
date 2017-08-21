@@ -6,6 +6,7 @@
 class PartitySource < ActiveRecord::Base
   validates_presence_of :block_parity_id, :platform, :ticker_url
   after_save :sync_anchor
+  scope :price, ->{order(last_price: :desc)}
 
   def sync_anchor
     if self.css_anchor.blank?

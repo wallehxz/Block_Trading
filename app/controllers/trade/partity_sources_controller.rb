@@ -3,7 +3,7 @@ class Trade::PartitySourcesController < Trade::BaseController
   before_action :set_source, only: [:edit, :update, :destroy]
 
   def index
-    @sources = PartitySource.where(block_parity_id:@block).paginate(page:params[:page])
+    @sources = PartitySource.where(block_parity_id:@block).price.paginate(page:params[:page])
   end
 
   def new
