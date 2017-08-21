@@ -6,3 +6,8 @@
 //= require yepnope
 //= require banner
 //= require stopExecutionOnTimeout
+
+$().ready(function(){
+  var screen_height = $(window).height() - 50;
+  $('.page-banner').css("height",screen_height + 'px');
+})
