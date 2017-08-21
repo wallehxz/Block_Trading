@@ -62,7 +62,7 @@ class Api::TickersController < ApplicationController
     if balance
       balance.update_attributes(amount:amount)
     else
-      Balance.create(block:block,amount:amount) if amount > 0
+      Balance.create(block:block,amount:amount) if amount.to_f > 0
     end
   end
 
