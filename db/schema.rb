@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170819095437) do
+ActiveRecord::Schema.define(version: 20170821073420) do
 
   create_table "balances", force: :cascade do |t|
     t.string   "block",      limit: 255
@@ -79,6 +79,26 @@ ActiveRecord::Schema.define(version: 20170819095437) do
     t.integer  "state",      limit: 4,   default: 0
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
+  end
+
+  create_table "quote_tickers", force: :cascade do |t|
+    t.integer  "quote_id",   limit: 4
+    t.float    "last_price", limit: 24
+    t.date     "that_date"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  create_table "quotes", force: :cascade do |t|
+    t.string   "platform",   limit: 255
+    t.string   "block",      limit: 255
+    t.string   "source",     limit: 255
+    t.string   "anchor",     limit: 255
+    t.float    "increase",   limit: 24
+    t.float    "decline",    limit: 24
+    t.boolean  "state"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "users", force: :cascade do |t|

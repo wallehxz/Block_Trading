@@ -1,18 +1,17 @@
-<%= content_for(:title,  '区块差价列表 | BLOCK') %>
+<%= content_for(:title,  '买卖行情列表 | BLOCK') %>
 <section class="content-header">
   <h1>
-    区块差价 <small>信息预览</small>
+    买卖行情 <small>信息预览</small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-btc"></i> Dashboard</a></li>
-    <li class="active"><i class="fa fa-balance-scale"></i> 区块差价</li>
+    <li class="active"><i class="fa fa-btc"></i> 买卖行情</li>
   </ol>
 </section>
 <section class="content">
   <div class="box box-primary">
     <div class="box-header">
-      <a href="<%= new_trade_block_parity_path %>" class="btn bg-primary btn-flat"><i class="ion-plus"></i> 添加区块</a>
-      <a href="<%= new_trade_block_parity_path %>" class="btn bg-primary btn-flat"><i class="fa fa-hand-grab-o"></i> 手动同步</a>
+      <a href="<%= new_trade_quote_path %>" class="btn bg-primary btn-flat"><i class="ion-plus"></i> 添加行情</a>
     </div>
     <div class="box-body">
       <div class="row">
@@ -20,45 +19,52 @@
           <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
             <thead>
             <tr>
-              <th tabindex="0" aria-controls="example1" style="text-align: center">名称</th>
-              <th tabindex="0" aria-controls="example1" style="text-align: center">差价率</th>
-              <th tabindex="0" aria-controls="example1" style="text-align: center">差价值</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">平台</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">区块</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">涨幅</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">跌幅</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">状态</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center;width: 240px">操作</th>
             </tr>
             </thead>
             <tbody>
-            <% @parities.each do |item| %>
+            <% @quotes.each do |item| %>
               <tr style="text-align: center">
                 <td>
                   <label class="btn bg-info btn-flat" style="font-size: 16px">
+                    <i class="fa fa-bank"></i>
+                    <%= item.platform %>
+                  </label>
+                </td>
+                <td>
+                  <label class="btn bg-black btn-flat" style="font-size: 16px">
                     <i class="fa fa-btc"></i>
                     <%= item.block %>
                   </label>
                 </td>
                 <td>
                   <label class="btn bg-red btn-flat" style="font-size: 16px">
-                    <i class="fa fa-balance-scale"></i>
-                    <%= item.agio_rate %>%
+                    <i class="fa fa-arrow-up"></i>
+                    <%= item.increase %>%
                   </label>
                 </td>
                 <td>
-                  <label class="btn bg-purple btn-flat" style="font-size: 16px">
-                    <i class="fa fa-cny"></i>
-                    <%= item.agio_price %>
+                  <label class="btn bg-green btn-flat" style="font-size: 16px">
+                    <i class="fa fa-arrow-down"></i>
+                    <%= item.decline %>%
                   </label>
                 </td>
                 <td><input type="checkbox" name="my-checkbox" <%= 'checked' if item.state %> onchange='switch_state(<%= item.id %>)'></td>
                 <td>
-                  <a href="<%= trade_block_parity_partity_sources_path(item) %>" class="btn bg-green btn-flat">
+                  <a href="<%= trade_quote_quote_tickers_path(item) %>" class="btn bg-green btn-flat">
                     <i class="fa fa-area-chart"></i>
-                    区间
+                    行情
                   </a>
-                  <a href="<%= edit_trade_block_parity_path(item) %>" class="btn bg-orange btn-flat">
+                  <a href="<%= edit_trade_quote_path(item) %>" class="btn bg-orange btn-flat">
                     <i class="glyphicon glyphicon-edit"></i>
                     编辑
                   </a>
-                  <a href="<%= trade_block_parity_path(item) %>" class="btn bg-red btn-flat" data-method="delete" data-confirm="确定删除该条轮播吗？">
+                  <a href="<%= trade_quote_path(item) %>" class="btn bg-red btn-flat" data-method="delete" data-confirm="确定删除买卖行情？">
                     <i class="glyphicon glyphicon-trash"></i>
                     删除
                   </a>
@@ -71,11 +77,11 @@
       </div>
       <div class="row">
         <div class="col-sm-5">
-          <div class="dataTables_info" id="example1_info" role="status" aria-live="polite"><h5>总计：「<%= @parities.count %>」区块</h5></div>
+          <div class="dataTables_info" id="example1_info" role="status" aria-live="polite"><h5>总计：「<%= @quotes.count %>」行情</h5></div>
         </div>
         <div class="col-sm-12">
           <div class="dataTables_paginate paging_simple_numbers">
-          <%= will_paginate @parities, :class=>'apple_pagination' %>
+          <%= will_paginate @quotes, :class=>'apple_pagination' %>
           </div>
         </div>
       </div>
@@ -85,7 +91,7 @@
 <% content_for :script_footer do %>
   <script type="text/javascript">
     function switch_state(item) {
-      $.get('/trade/block_parities/' + item +'/change_state');
+      $.get('/trade/quotes/' + item +'/change_state');
     }
     $("[name='my-checkbox']").bootstrapSwitch({onColor:'success',offColor:'danger'});
   </script>

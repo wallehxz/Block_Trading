@@ -63,5 +63,10 @@
         </a>
       </li>
     <% end %>
+    <li class="treeview <%= 'active' if controller_name =='quotes'%>">
+      <a href="<%= trade_quotes_path %>" target="_self">
+        <i class="fa fa-snowflake-o"></i> <span> 买卖资讯</span>
+      </a>
+    </li>
   </ul>
 </section>

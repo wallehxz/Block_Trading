@@ -4,6 +4,7 @@ class Api::ParitiesController < ApplicationController
     BlockParity.where(state:true).each do |item|
       block_sources(item)
     end
+    render json:{code:200}
   end
 
   def block_sources(block)
@@ -11,7 +12,6 @@ class Api::ParitiesController < ApplicationController
       price = Nokogiri::HTML(open(source.ticker_url)).at_css(source.css_anchor).children.text
       source.update_attributes(last_price:price) if price && price.to_f > 0
     end
-    render json:{code:200}
   end
 
 end

@@ -11,6 +11,12 @@ Rails.application.routes.draw do
       end
     end
     resources :balances
+    resources :quotes do
+      resources :quote_tickers
+      member do
+        get 'change_state'
+      end
+    end
     resources :pending_orders
     resources :block_parities do
       resources :partity_sources
@@ -26,6 +32,7 @@ Rails.application.routes.draw do
     get 'report_balance', to:'tickers#report_balance'
     get 'quotes_analysis', to:'tickers#quotes_analysis'
     get 'last_parity', to:'parities#last_parity'
+    get 'hit_tickers', to:'quotes#hit_tickers'
   end
 
   devise_for :users
