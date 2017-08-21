@@ -20,6 +20,7 @@
               <th tabindex="0" aria-controls="example1" style="text-align: center">数量</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">买价</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">卖价</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">报价</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">更新时间</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center;width: 163px">操作</th>
             </tr>
@@ -29,8 +30,9 @@
               <tr style="text-align: center">
                 <td><%= item.block %></td>
                 <td><%= item.amount %></td>
-                <td><%= item.buy_price %></td>
-                <td><%= item.sell_price %></td>
+                <td>￥: <%= item.buy_price %></td>
+                <td>￥: <%= item.sell_price %></td>
+                <td>￥: <%= item.quoted_price %></td>
                 <td><%= item.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
                 <td>
                   <a href="<%= edit_trade_balance_path(item) %>" class="btn bg-orange btn-flat">

@@ -9,4 +9,8 @@ class Balance < ActiveRecord::Base
   scope :quantity, ->{ order(amount: :desc) }
   belongs_to :chain, class_name:'Block',primary_key:'english', foreign_key:'block'
   self.per_page = 20
+
+  def quoted_price
+    self.chain.tickers.last.last_price rescue ''
+  end
 end
