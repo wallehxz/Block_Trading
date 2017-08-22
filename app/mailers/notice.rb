@@ -20,13 +20,13 @@ class Notice < ApplicationMailer
     mail to: email,subject: "区块链余额通知"
   end
 
-  def focus_report(email,report)
-    @msg = report
+  def focus_report(email,msg)
+    @msg = msg
     mail to: email,subject: "区块链极值通知"
   end
 
   def quotes_report(email,msg)
-    @msg = report
+    @msg = msg
     mail to: email,subject: "代币买卖通知"
   end
 end
