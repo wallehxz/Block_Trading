@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     get 'quotes_analysis', to:'tickers#quotes_analysis'
     get 'last_parity', to:'parities#last_parity'
     get 'hit_tickers', to:'quotes#hit_tickers'
+    get 'extremum_report', to:'tickers#focus_extremum_report'
   end
 
   devise_for :users
