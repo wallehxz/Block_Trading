@@ -231,7 +231,7 @@ class Api::TickersController < ApplicationController
 
   def focus_extremum_report
     string = ''
-    FocusBlock.where(activation:true).each do |item|
+    FocusBlock.all.each do |item|
       string << focus_block_analysis(item.block) rescue ''
     end
     Notice.focus_report(Settings.receive_email,string).deliver_now if string.present?
