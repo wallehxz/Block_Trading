@@ -9,6 +9,7 @@ class Api::TickersController < ApplicationController
     end
     quotes_analysis
     focus_extremum_report
+    render json:{code:200,msg:'ticker success'}
   end
 
   def get_all_ticker
@@ -235,7 +236,6 @@ class Api::TickersController < ApplicationController
       string << focus_block_analysis(item.block) rescue ''
     end
     Notice.focus_report(Settings.receive_email,string).deliver_now if string.present?
-    render json:{code:200,msg:'focus report success'}
   end
 
   def focus_block_analysis(block)
