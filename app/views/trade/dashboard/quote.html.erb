@@ -19,7 +19,7 @@
           <select onchange="javascript:location.href = this.value;" class="form-control" style="display: inline;">
             <option value="?">请选择区块</option>
             <% Quote.all.each do |item|%>
-              <option value="?block=<%= item.id %>&start=<%= params[:start] || Date.current.to_s %>&end=<%= params[:end] || Date.current.to_s %>" <%= 'selected' if params[:block] == item.id %>><%= item.block %>[<%= item.platform %>]</option>
+              <option value="?block=<%= item.id %>&start=<%= params[:start] || Date.current.to_s %>&end=<%= params[:end] || Date.current.to_s %>" <%= 'selected' if params[:block] == item.id.to_s %>><%= item.block %>[<%= item.platform %>]</option>
             <% end %>
           </select>
         </div>
