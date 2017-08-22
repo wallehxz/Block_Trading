@@ -9,6 +9,7 @@ class Trade::DashboardController < Trade::BaseController
     tickers = @block.tickers.last(48) if tickers.count == 0
     @date_array = tickers.map {|x| x.created_at.strftime('%H:%M')}
     @value_array = tickers.map {|x| x.last_price}
+    @ma5_array = tickers.map {|x| x.ma5_price}
   end
 
   def quote
@@ -20,6 +21,7 @@ class Trade::DashboardController < Trade::BaseController
     tickers = @block.tickers.last(24) if tickers.count == 0
     @date_array = tickers.map {|x| x.created_at.strftime('%H:%M')}
     @value_array = tickers.map {|x| x.last_price}
+    @ma5_array = tickers.map {|x| x.ma5_price}
   end
 
 end

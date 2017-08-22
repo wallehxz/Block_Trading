@@ -38,6 +38,6 @@ class Trade::QuoteTickersController < Trade::BaseController
     end
 
     def quote_ticker_params
-      params.require(:quote_ticker).permit(:quote_id, :last_price,:that_date)
+      params.require(:quote_ticker).permit(:quote_id, :last_price, :ma5_price, :that_date)
     end
 end

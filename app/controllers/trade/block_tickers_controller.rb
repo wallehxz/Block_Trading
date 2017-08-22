@@ -38,6 +38,6 @@ class Trade::BlockTickersController < Trade::BaseController
     end
 
     def block_ticker_params
-      params.require(:block_ticker).permit(:block_id, :last_price,:buy_price,:sell_price)
+      params.require(:block_ticker).permit(:block_id, :last_price,:buy_price,:sell_price,:ma5_price)
     end
 end

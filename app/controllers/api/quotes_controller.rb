@@ -4,6 +4,7 @@ class Api::QuotesController < ApplicationController
     Quote.where(state:true).each do |item|
       sync_quote(item)
     end
+    quotes_report
     render json:{code:200}
   end
 

@@ -62,14 +62,24 @@
       type: 'line',
       data: {
         labels: <%= raw @date_array %>,
-        datasets: [{
-          label: "<%= @block.block %>",
-          data: <%= @value_array %>,
-          fill: false,
-          backgroundColor: 'rgba(43,61,60,0.2)',
-          borderColor: 'rgba(43,61,60,1)',
-          lineTension: 0.25,
-        }]
+        datasets: [
+          {
+            label: "<%= @block.block %> 价格",
+            data: <%= @value_array %>,
+            fill: false,
+            backgroundColor: 'rgba(43,61,60,0.2)',
+            borderColor: 'rgba(43,61,60,1)',
+            lineTension: 0.25,
+          },
+          {
+            label: "<%= @block.block %> 均值",
+            data: <%= @ma5_array %>,
+            fill: false,
+            backgroundColor: 'rgba(242, 158, 76,0.2)',
+            borderColor: 'rgba(242, 158, 76, 1)',
+            lineTension: 0.25
+          }
+        ]
       },
       options: {
         duration: 200,
