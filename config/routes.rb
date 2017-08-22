@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   namespace :trade do
     get '/', to:'dashboard#index', as: :root
+    get '/quote', to:'dashboard#quote'
     resources :blocks do
       resources :block_tickers
     end

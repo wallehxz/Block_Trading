@@ -7,6 +7,8 @@
 # t.boolean  "state"
 class Quote < ActiveRecord::Base
   after_save :sync_anchor
+  has_many :tickers, class_name:'QuoteTicker',foreign_key:'quote_id'
+
 
   def sync_anchor
     if self.anchor.blank?

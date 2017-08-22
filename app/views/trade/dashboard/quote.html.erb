@@ -1,14 +1,14 @@
-<%= content_for(:title,  'Ｋ线行情 | Block') %>
+<%= content_for(:title,  @block.block + '价格历史 | Block') %>
 <%= content_for :script do %>
   <%= javascript_include_tag 'chart', 'data-turbolinks-track' => true %>
 <% end %>
 <section class="content-header">
   <h1>
-    <%= @block.english %>行情  <small>信息预览</small>
+    价格历史<small>信息预览</small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li class="active"><i class="fa fa-chart"></i> Ｋ线行情 </li>
+    <li class="active"><i class="fa fa-chart"></i> 价格历史 </li>
   </ol>
 </section>
 <section class="content">
@@ -17,19 +17,19 @@
       <div class="row">
         <div class="col-sm-2">
           <select onchange="javascript:location.href = this.value;" class="form-control" style="display: inline;">
-            <option value="?">请选择区块链</option>
-            <% Block.named.each do |item|%>
-              <option value="?block=<%= item.english %>&start=<%= params[:start] || Date.current.to_s %>&end=<%= params[:end] || Date.current.to_s %>" <%= 'selected' if params[:block] == item.english %>><%= item.full_name %></option>
+            <option value="?">请选择区块</option>
+            <% Quote.all.each do |item|%>
+              <option value="?block=<%= item.id %>&start=<%= params[:start] || Date.current.to_s %>&end=<%= params[:end] || Date.current.to_s %>" <%= 'selected' if params[:block] == item.id %>><%= item.block %>[<%= item.platform %>]</option>
             <% end %>
           </select>
         </div>
         <div class="col-sm-9">
-          <form action="<%= trade_root_path %>" method="get">
+          <form action="<%= trade_quote_path %>" method="get">
             <div class="col-sm-3">
               <div class="form-group has-feedback">
                 <div class="input-group">
                   <input id='start' type="text" name="start" value="<%= params[:start] || Date.current.to_s %>" class="form-control" placeholder="起始日期">
-                  <input type="hidden" name="block" value="<%= params[:block] || 'btc'%>">
+                  <input type="hidden" name="block" value="<%= params[:block] || Quote.first.id %>">
                 </div>
               </div>
             </div>
@@ -63,11 +63,11 @@
       data: {
         labels: <%= raw @date_array %>,
         datasets: [{
-          label: "<%= @block.chinese %>",
+          label: "<%= @block.block %>",
           data: <%= @value_array %>,
           fill: false,
-          backgroundColor: 'rgba(43, 61, 60,0.2)',
-          borderColor: 'rgba(43, 61, 60, 1)',
+          backgroundColor: 'rgba(43,61,60,0.2)',
+          borderColor: 'rgba(43,61,60,1)',
           lineTension: 0.25,
         }]
       },
@@ -76,8 +76,8 @@
         title: {
           display: true,
           fontSize: 18,
-          fontColor: 'rgba(246, 81, 29, 1)',
-          text: "<%= @block.chinese %>价格趋势"
+          fontColor: 'rgba(216, 91, 60, 1)',
+          text: '买卖历史价格'
         }
       }
   });
