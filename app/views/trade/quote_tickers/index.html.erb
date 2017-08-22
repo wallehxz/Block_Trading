@@ -17,6 +17,7 @@
             <thead>
             <tr>
               <th tabindex="0" aria-controls="example1" style="text-align: center">价格</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">均价</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">时间</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center;width: 163px">操作</th>
             </tr>
@@ -25,6 +26,7 @@
             <% @tickers.each do |item| %>
               <tr style="text-align: center">
                 <td><%= item.last_price %></td>
+                <td><%= item.ma5_price %></td>
                 <td><%= item.created_at.strftime('%Y-%m-%d %H:%M') %></td>
                 <td>
                   <a href="<%= edit_trade_quote_quote_ticker_path(@quote,item) %>" class="btn bg-orange btn-flat">

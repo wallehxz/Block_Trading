@@ -19,6 +19,7 @@
               <th tabindex="0" aria-controls="example1" style="text-align: center">成交价</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">买一价</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">卖一价</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">均价</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center">时间</th>
               <th tabindex="0" aria-controls="example1" style="text-align: center;width: 163px">操作</th>
             </tr>
@@ -29,6 +30,7 @@
                 <td><%= item.last_price %></td>
                 <td><%= item.buy_price %></td>
                 <td><%= item.sell_price %></td>
+                <td><%= item.ma5_price %></td>
                 <td><%= item.created_at.strftime('%Y-%m-%d %H:%M') %></td>
                 <td>
                   <a href="<%= edit_trade_block_block_ticker_path(@block,item) %>" class="btn bg-orange btn-flat">
