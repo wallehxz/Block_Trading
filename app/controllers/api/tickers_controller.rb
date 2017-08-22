@@ -232,7 +232,7 @@ class Api::TickersController < ApplicationController
   def focus_extremum_report
     string = ''
     FocusBlock.all.each do |item|
-      string << focus_block_analysis(item.block)
+      string << focus_block_analysis(item.block) rescue ''
     end
     Notice.focus_report(Settings.receive_email,string).deliver_now if string.present?
     render json:{code:200,msg:'focus report success'}
@@ -262,11 +262,11 @@ class Api::TickersController < ApplicationController
     end
 
     def hight_point_template(block)
-      "<p style='color:#CC0066'>#{block.full_name} 处于最高价值点，当前价格: #{block.tickers.last.last_price}#{', 历史三天连续上涨' if block.ifcontinuous_rise?}#{', 历史三天连续下跌' if block.continuous_decline?}</p>"
+      "<p style='color:#CC0066'>#{block.full_name} 处于最高价值点，当前价格: #{block.tickers.last.last_price}#{', 历史三天连续上涨' if block.continuous_rise?}#{', 历史三天连续下跌' if block.continuous_decline?}</p>"
     end
 
     def low_point_template(block)
-      "<p style='color:#339966'>#{blockfull_name} 处于最低价值点，当前价格: #{block.tickers.last.last_price}#{', 历史三天连续上涨' if block.ifcontinuous_rise?}#{', 历史三天连续下跌' if block.continuous_decline?}</p>"
+      "<p style='color:#339966'>#{blockfull_name} 处于最低价值点，当前价格: #{block.tickers.last.last_price}#{', 历史三天连续上涨' if block.continuous_rise?}#{', 历史三天连续下跌' if block.continuous_decline?}</p>"
     end
 
     def block_worth_statistical(item)
