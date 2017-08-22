@@ -34,7 +34,7 @@ class Api::TickersController < ApplicationController
   def sync_balance
     if balances = remote_balance
       balances.each do |k,v|
-        if v.to_f > 0 && !k.include?('_balance_')
+        if v.to_f >= 0 && !k.include?('_balance_')
           sync_local(k.chomp('_balance'),v)
         end
       end
@@ -62,7 +62,7 @@ class Api::TickersController < ApplicationController
     if balance
       balance.update_attributes(amount:amount)
     else
-      Balance.create(block:block,amount:amount)
+      Balance.create(block:block,amount:amount) if amount.to_f > 0
     end
   end
 
