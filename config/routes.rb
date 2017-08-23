@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
 
   namespace :trade do
-    get '/', to:'dashboard#index', as: :root
-    get '/quote', to:'dashboard#quote'
+    get '/', to:'dashboard#index', as: :block_ticker
+    get '/quote', to:'dashboard#quote', as: :quote_ticker
     resources :blocks do
       resources :block_tickers
     end

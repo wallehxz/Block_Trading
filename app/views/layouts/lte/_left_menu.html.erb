@@ -20,7 +20,7 @@
   <ul class="sidebar-menu">
     <li class="header">交易中心</li>
     <li class="treeview <%= 'active' if controller_name == 'dashboard' && action_name == 'index'%>">
-      <a href="<%= trade_root_path %>" target="_self">
+      <a href="<%= trade_block_ticker_path %>" target="_self">
         <i class="fa fa-dashboard"></i> <span> 区块趋势</span>
       </a>
     </li>
@@ -64,7 +64,7 @@
       </li>
     <% end %>
     <li class="treeview <%= 'active' if controller_name == 'dashboard' && action_name == 'quote' %>">
-      <a href="<%= trade_quote_path %>" target="_self">
+      <a href="<%= trade_quote_ticker_path %>" target="_self">
         <i class="fa fa-bar-chart"></i> <span> 价格趋势</span>
       </a>
     </li>

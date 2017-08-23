@@ -1,5 +1,6 @@
 class Trade::QuotesController < Trade::BaseController
-  before_action :set_quote, only:[:edit, :update, :destroy]
+
+  before_action :set_quote, only:[:edit,:update,:destroy,:change_state]
 
   def index
     @quotes = Quote.paginate(page:params[:page])
@@ -19,8 +20,8 @@ class Trade::QuotesController < Trade::BaseController
     end
   end
 
-
   def edit
+
   end
 
   def update
