@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   namespace :trade do
     get '/', to:'dashboard#index', as: :block_ticker
-    get '/quote', to:'dashboard#quote', as: :quote_ticker
+    get '/token', to:'dashboard#token', as: :token_ticker
     resources :blocks do
       resources :block_tickers
     end

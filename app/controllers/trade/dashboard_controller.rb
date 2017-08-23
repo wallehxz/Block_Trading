@@ -12,7 +12,7 @@ class Trade::DashboardController < Trade::BaseController
     @ma5_array = tickers.map {|x| x.ma5_price}
   end
 
-  def quote
+  def token
     block = params[:block] || Quote.first.id
     sta_time = params[:start] || Date.current.to_s
     end_time = params[:end] || Date.current.to_s
