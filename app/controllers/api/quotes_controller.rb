@@ -31,11 +31,11 @@ class Api::QuotesController < ApplicationController
     if quote_24h.max == quote_24h[-1]
       tip << "，处于最高卖出点，涨幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
     elsif quote_24h.min == quote_24h[-1]
-      tip << "，处于最高买入点，跌幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
+      tip << "，处于最低买入点，涨幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
     elsif quote_24h[-1] > quote_24h[-2] && quote_24h[-1] > block.ma5_recent && quote_24h[-2] < block.ma5_previous
       tip << "，处于MA5买入点，涨幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
     elsif quote_24h[-1] < quote_24h[-2] && quote_24h[-1] < block.ma5_recent && quote_24h[-2] > block.ma5_previous
-      tip << "，处于MA5卖出点，跌幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
+      tip << "，处于MA5卖出点，涨幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
     end
     color_array = ['#FF9933','#FF6699','#CC66CC','#CC3366','#996666','#6666FF']
     return "<p style='color:#{color_array[rand(6)]}'>#{block.platform} - #{block.block}, 最新价格 #{quote_24h[-1]}#{tip}</p>" if tip.present?

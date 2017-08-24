@@ -84,7 +84,7 @@ class Block < ActiveRecord::Base
     two_line_max = self.day_historical(2).map{|x| x.last_price}.max || 0
     one_line_min = self.day_historical(1).map{|x| x.last_price}.min || 0
     two_line_min = self.day_historical(2).map{|x| x.last_price}.min || 0
-    return true if two_line_max > one_line_max && two_line_min > one_line_min
+    return true if one_line_max < two_line_max && one_line_min < two_line_min
     return false
   end
 

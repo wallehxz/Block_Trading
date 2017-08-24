@@ -262,11 +262,11 @@ class Api::TickersController < ApplicationController
     end
 
     def hight_point_template(block)
-      "<p style='color:#CC0066'>#{block.full_name} 处于最高价值点，当前价格: #{block.tickers.last.last_price}#{', 历史三天连续上涨' if block.continuous_rise?}#{', 历史三天连续下跌' if block.continuous_decline?}</p>"
+      "<p style='color:#CC0066'>#{block.full_name} 处于最高价值点，当前价格: #{block.tickers.last.last_price}#{', 历史两天连续上涨' if block.continuous_rise?}#{', 历史两天连续下跌' if block.continuous_decline?}</p>"
     end
 
     def low_point_template(block)
-      "<p style='color:#339966'>#{blockfull_name} 处于最低价值点，当前价格: #{block.tickers.last.last_price}#{', 历史三天连续上涨' if block.continuous_rise?}#{', 历史三天连续下跌' if block.continuous_decline?}</p>"
+      "<p style='color:#339966'>#{blockfull_name} 处于最低价值点，当前价格: #{block.tickers.last.last_price}#{', 历史两天连续上涨' if block.continuous_rise?}#{', 历史两天连续下跌' if block.continuous_decline?}</p>"
     end
 
     def block_worth_statistical(item)
