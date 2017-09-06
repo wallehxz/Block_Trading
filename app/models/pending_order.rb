@@ -40,6 +40,7 @@ class PendingOrder < ActiveRecord::Base
       else
         msg = "<p>#{self.block} 挂单#{self.maimai}失败，导致原因: #{tip}，请知悉，如有必要，请反馈给开发者,提升系统运行体验</p>"
         Notice.info_notice(Settings.receive_email,msg).deliver_now
+        return self.delete
       end
       self.update_attributes(state: 2)
     end
