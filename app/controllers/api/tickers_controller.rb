@@ -128,59 +128,59 @@ class Api::TickersController < ApplicationController
     elsif focus.block.continuous_decline? #熊市
       decline_quotes(focus,market)
     else
-      normal_quotes(focus,market)
+      normal_quotes(focus,market) #普通行情
     end
   end
 
   def rise_quotes(focus,market)
     balance = focus.block.balance
-    if market[-2] > market[-1] && market[-1] < focus.block.ma5_quotes && focus.block.ma5_quotes && market[-2] > (market[-6..-2].sum / 5)#下跌至 ma5 线，抛出一部分
-      if balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.0618
-        sell_part_block(focus,0.25)
-      elsif balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.15
-        sell_part_block(focus,0.5)
+    if market[-2] > market[-1] && market[-1] < focus.block.ma5_quotes && focus.block.ma5_quotes && market[-2] > (market[-6..-2].sum / 5) #下跌至 ma5 线，抛出一部分
+      if balance && balance.amount > 1
+        sell_part_block(focus,0.5) if market[-1] > balance.buy_price * 1.2
+        sell_part_block(focus,0.25) if market[-1] > balance.buy_price * 1.0618
       end
-    elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) && balance.amount * balance.buy_price < focus.total_price * 1.5 #牛市涨至突破ma5，持有部分
+    elsif balance && market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) && balance.amount * balance.buy_price < focus.total_price * 1.5 #牛市涨至突破ma5，如果且持有的总价值小于既定的1.5倍
       buy_block(focus,0.3) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.3 的量
       buy_block(focus,0.2) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(2) && focus.block.today_buy_interval(6) #如果当天已买过，最多买三次则购买 0.1 的量, 且间隔大于6小时
-    elsif balance && market[-1] > balance.buy_price * 1.2 && balance.amount > 1
+    elsif balance && market[-2] == market.max && market[-1] > balance.buy_price * 1.2 && balance.amount > 1
       sell_part_block(focus,0.618)
     end
   end
 
   def decline_quotes(focus,market)
     balance = focus.block.balance
-    if market[-1] < focus.block.yesterday_minimum
-      if balance && market[-1] > balance.buy_price * 0.75 && balance.amount > 1 && balance.amount * balance.buy_price < focus.total_price * 1.5
+    if balance && balance.amount * balance.buy_price < focus.total_price * 1.5
+      if market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) && market[-1] < balance.buy_price * 0.75
         buy_block(focus,0.2) if !focus.block.today_had_buy? #如果当天未买过,则购买0.2的量
-      elsif balance && market[-1] < balance.buy_price * 0.75
-        stop_loss_block(focus) if balance.amount > 1
-        buy_block(focus,0.3) if balance.amount < 1 && !focus.block.today_had_buy? #无论是否连续跌，都只买一次
-      elsif balance.nil?
-        buy_block(focus,0.3)
+      elsif market[-2] == market.min && market[-1] < balance.buy_price * 0.618
+        buy_block(focus,0.3) if !focus.block.today_had_buy? #无论是否连续跌，都只买一次
       end
-    elsif market[-1] > focus.block.balance.buy_price * 1.0618 #如果反弹上涨，则先抛出
-      sell_part_block(focus,1)
+    elsif balance && market[-2] == market.max && market[-1] > balance.buy_price * 1.0618 #如果反弹上涨，则先抛出
+      sell_part_block(focus,0.5)
     end
   end
 
   def normal_quotes(focus,market)
     balance = focus.block.balance
-    if market[-2] > market[-1] && market[-1] < focus.block.ma5_quotes && focus.block.ma5_quotes && market[-2] > (market[-6..-2].sum / 5) #日常至 ma5 线，抛出一部分
-      if balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.05
-        sell_part_block(focus,0.2)
-      elsif balance && balance.amount > 1 && market[-1] > balance.buy_price * 1.0618
-        sell_part_block(focus,0.25)
+    if market[-2] > market[-1] && market[-1] < focus.block.ma5_quotes && focus.block.ma5_quotes && market[-2] > (market[-6..-2].sum / 5) #涨跌至 ma5 线，抛出一部分
+      if balance && balance.amount > 1
+        sell_part_block(focus,0.2) if market[-1] > balance.buy_price * 1.0618
+        sell_part_block(focus,0.3) if market[-1] > balance.buy_price * 1.1
       end
-    elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #日常涨至突破ma5，持有部分
-      if balance && balance.amount > 1 && balance.amount * balance.buy_price < focus.total_price * 1.5 && market[-1] < balance.buy_price #买入的数量总价值不大于设定值的1.5倍
-        buy_block(focus,0.2) if !focus.block.today_had_buy? #如果当天未买过,则购买 0.2 的量
-        buy_block(focus,0.1) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(2) #如果当天已买过，最多买两次则购买 0.1 的量
+    elsif market[-2] < market[-1] && market[-1] > focus.block.ma5_quotes && market[-2] < (market[-6..-2].sum / 5) #跌涨至ma5，持有部分
+      if balance && balance.amount > 1 && balance.amount * balance.buy_price < focus.total_price * 1.5 #买入的数量总价值不大于设定值的1.5倍
+        buy_block(focus,0.2) if !focus.block.today_had_buy? && market[-1] < balance.buy_price * 0.8 #如果当天未买过,则购买 0.2 的量
+        buy_block(focus,0.3) if focus.block.today_had_buy? && !focus.block.today_had_buy_count(2) && market[-1] < balance.buy_price * 0.75 #如果当天已买过，最多买两次则购买 0.1 的量
       elsif balance && balance.amount < 1
         buy_block(focus,0.3)
-      elsif balance.nil?
-        buy_block(focus,0.3)
       end
+    elsif market.max == market[-2] && balance && balance.amount > 1
+      sell_part_block(focus,0.5) if market[-1] > balance.buy_price * 1.5
+      sell_part_block(focus,0.3) if market[-1] > balance.buy_price * 1.25
+      sell_part_block(focus,0.2) if market[-1] > balance.buy_price * 1.1
+    elsif market.min == market[-2] && balance && balance.amount * balance.buy_price < focus.total_price * 1.5
+      buy_block(focus,0.3) if market[-1] < balance.buy_price * 0.75 && !focus.block.today_had_buy_count(2)
+      buy_block(focus,0.2) if market[-1] < balance.buy_price * 0.8 && !focus.block.today_had_buy?
     end
   end
 
@@ -222,7 +222,8 @@ class Api::TickersController < ApplicationController
   end
 
   def report_balance
-    string = ''
+    total_value = Balance.named.map {|x| x.amount * x.quoted_price if x.quoted_price.present? && x.amount > 1}.compact.sum.round(2)
+    string = "<p style='color:6666FF'>总价值：￥#{total_value}</p>"
     Balance.named.each do |item|
       string << block_worth_statistical(item) rescue ''
     end
