@@ -254,9 +254,9 @@ class Api::TickersController < ApplicationController
   def buy_or_sell_analysis(block)
     quotes = block.tickers.last(48).map{ |x| x.last_price }
     if quotes.max == quotes[-1]
-      return hight_buy_template(block)
+      return hight_sell_template(block)
     elsif quotes.min == quotes[-1]
-      return low_sell_template(block)
+      return low_buy_template(block)
     end
   end
 
@@ -266,12 +266,12 @@ class Api::TickersController < ApplicationController
       return ((new_price - old_price) / old_price * 100).to_i
     end
 
-    def hight_buy_template(block)
-      "#{block.full_name}最高买出点,价格: #{block.tickers.last.last_price};"
+    def hight_sell_template(block)
+      "〖#{block.english}〗于最高点,价格: ↑#{block.tickers.last.last_price};"
     end
 
-    def low_sell_template(block)
-      "#{block.full_name}最低买入点,价格: #{block.tickers.last.last_price};"
+    def low_buy_template(block)
+      "〖#{block.english}〗于最低点,价格: ↓#{block.tickers.last.last_price};"
     end
 
     def rise_template(block,last_price,opt)
