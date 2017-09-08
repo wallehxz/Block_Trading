@@ -233,9 +233,12 @@ class Api::TickersController < ApplicationController
 
   def focus_extremum_report
     string = ''
+    content = ''
     FocusBlock.all.each do |item|
       string << focus_block_analysis(item.block) rescue ''
+      content << buy_or_sell_analysis(item.block) rescue ''
     end
+    User.sms(content) if content.present?
     Notice.focus_report(Settings.receive_email,string).deliver_now if string.present?
   end
 
@@ -248,10 +251,27 @@ class Api::TickersController < ApplicationController
     end
   end
 
+  def buy_or_sell_analysis(block)
+    quotes = block.tickers.last(48).map{ |x| x.last_price }
+    if quotes.max == quotes[-1]
+      return hight_buy_template(block)
+    elsif quotes.min == quotes[-1]
+      return low_sell_template(block)
+    end
+  end
+
   private
 
     def amplitude(old_price,new_price)
       return ((new_price - old_price) / old_price * 100).to_i
+    end
+
+    def hight_buy_template(block)
+      "#{block.full_name}最高买出点,价格: #{block.tickers.last.last_price};"
+    end
+
+    def low_sell_template(block)
+      "#{block.full_name}最低买入点,价格: #{block.tickers.last.last_price};"
     end
 
     def rise_template(block,last_price,opt)
