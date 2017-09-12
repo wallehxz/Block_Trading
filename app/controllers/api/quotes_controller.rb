@@ -2,7 +2,7 @@ class Api::QuotesController < ApplicationController
 
   def hit_tickers
     Quote.where(state:true).each do |item|
-      sync_quote(item)
+      sync_quote(item) rescue nil
     end
     quotes_report
     render json:{code:200}
