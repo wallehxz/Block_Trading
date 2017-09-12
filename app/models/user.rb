@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
     {0=>'管理员',2=>'普通用户'}[self.role]
   end
 
-  def self.sms_notice(content)
+  def self.sms_yunpian(content)
     yunpian = 'https://sms.yunpian.com/v2/sms/tpl_single_send.json'
     params = {}
     params[:apikey] = Settings.yunpian_key
@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
     Faraday.send(:post,yunpian, params)
   end
 
-  def self.sms(content)
+  def self.sms_bao(content)
     string = "【Block】代币价格通知：#{content}"
     sms_url = 'http://api.smsbao.com/sms'
     res = Faraday.get do |req|

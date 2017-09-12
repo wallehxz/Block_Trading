@@ -238,7 +238,7 @@ class Api::TickersController < ApplicationController
       string << focus_block_analysis(item.block) rescue ''
       content << buy_or_sell_analysis(item.block) rescue ''
     end
-    User.sms(content) if content.present?
+    User.sms_yunpian(content) if content.present?
     Notice.focus_report(Settings.receive_email,string).deliver_now if string.present?
   end
 
