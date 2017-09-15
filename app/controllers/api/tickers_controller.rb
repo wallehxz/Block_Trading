@@ -235,8 +235,9 @@ class Api::TickersController < ApplicationController
     string = ''
     content = ''
     FocusBlock.all.each do |item|
-      string << focus_block_analysis(item.block) rescue ''
+      string << focus_block_analysis(item.block) rescue '' #分析行情 包括极值，ma5，历史涨跌
       content << buy_or_sell_analysis(item.block) rescue ''
+      sync_smart_order(item) rescue ''
     end
     User.sms_yunpian(content) if content.present?
     Notice.focus_report(Settings.receive_email,string).deliver_now if string.present?
@@ -258,6 +259,35 @@ class Api::TickersController < ApplicationController
     elsif quotes.min == quotes[-1]
       return low_buy_template(block)
     end
+  end
+
+  def sync_smart_order(focus)
+    focus.undo_orders.each do |order|
+      order_factor_contrast(focus,order)
+    end
+  end
+
+  def order_factor_contrast(focus,order)
+    tiker = focus.tickers.last
+    balance = focus.block.balance
+    if order.business == '1' #买入
+      if order_business(tiker.sell_price,order)
+        generate_order(focus.block.english,1,order.amount,tiker.sell_price)
+        order.update_attributes(state:true)
+      end
+    else#卖出
+      if order_business(tiker.buy_price,order) && balance.amount > 1
+        block_amount = balance.amount if order.amount.present? && balance.amount < order.amount
+        block_amount = order.amount if order.amount.present? && balance.amount > order.amount
+        block_amount = balance.amount * order.scale if order.amount.nil?
+        generate_order(focus.block.english,2,block_amount,tiker.buy_price)
+        order.update_attributes(state:true)
+      end
+    end
+  end
+
+  def order_business(price,order)
+    return eval("#{price} #{order.factor} #{order.expect}")
   end
 
   private

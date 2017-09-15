@@ -1,0 +1,66 @@
+<%= content_for(:title,  '智能空单列表 | BLOCK') %>
+<section class="content-header">
+  <h1>
+    智能空单 <small>信息预览</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-btc"></i> Dashboard</a></li>
+    <li class="active"><i class="fa fa-exchange"></i> 智能空单</li>
+  </ol>
+</section>
+<section class="content">
+  <div class="box box-primary">
+    <div class="box-header">
+      <a href="<%= new_trade_focus_block_smart_order_path(@focus) %>" class="btn bg-primary btn-flat"><i class="ion-plus"></i> 添加空单</a>
+    </div>
+    <div class="box-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+            <thead>
+            <tr>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">操作</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">条件</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">比例</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">价值</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center">状态</th>
+              <th tabindex="0" aria-controls="example1" style="text-align: center;width: 165px">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @orders.each do |item| %>
+              <tr style="text-align: center">
+                <td><%= item.business_cn %></td>
+                <td><%= item.factor_cn %></td>
+                <td><%= item.scale_cn %></td>
+                <td><%= item.expect %></td>
+                <td><%= item.state_cn %></td>
+                <td>
+                  <a href="<%= edit_trade_focus_block_smart_order_path(@focus,item) %>" class="btn bg-orange btn-flat">
+                    <i class="glyphicon glyphicon-edit"></i>
+                    编辑
+                  </a>
+                  <a href="<%= trade_focus_block_smart_order_path(@focus,item) %>" class="btn bg-red btn-flat" data-method="delete" data-confirm="确定删除空单信息？">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    删除
+                  </a>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="dataTables_info" id="example1_info" role="status" aria-live="polite"><h5>总计：「<%= @orders.count %>」例</h5></div>
+        </div>
+        <div class="col-sm-12">
+          <div class="dataTables_paginate paging_simple_numbers">
+          <%= will_paginate @orders, :class=>'apple_pagination' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

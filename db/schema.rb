@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170822074846) do
+ActiveRecord::Schema.define(version: 20170915023136) do
 
   create_table "balances", force: :cascade do |t|
     t.string   "block",      limit: 255
@@ -98,6 +98,18 @@ ActiveRecord::Schema.define(version: 20170822074846) do
     t.string   "anchor",     limit: 255
     t.float    "increase",   limit: 24
     t.float    "decline",    limit: 24
+    t.boolean  "state"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "smart_orders", force: :cascade do |t|
+    t.integer  "focus_id",   limit: 4
+    t.string   "business",   limit: 255
+    t.string   "factor",     limit: 255
+    t.float    "scale",      limit: 24
+    t.float    "amount",     limit: 24
+    t.float    "expect",     limit: 24
     t.boolean  "state"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false

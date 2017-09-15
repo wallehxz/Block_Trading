@@ -41,6 +41,13 @@
         <i class="fa fa-heartbeat"></i> <span>  关注区块</span>
       </a>
     </li>
+    <% if controller_name == 'smart_orders' %>
+      <li class="treeview <%= 'active' if controller_name =='smart_orders' %>">
+        <a href="<%= trade_focus_block_smart_orders_path(params[:focus_block_id]) %>" target="_self">
+          <i class="fa fa-exchange"></i> <span>  智能空单</span>
+        </a>
+      </li>
+    <% end %>
     <li class="treeview <%= 'active' if controller_name=='pending_orders' %>">
       <a href="<%= trade_pending_orders_path %>" target="_self">
         <i class="fa fa-cny"></i> <span> 买卖挂单</span>

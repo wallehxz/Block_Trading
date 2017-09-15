@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :block_tickers
     end
     resources :focus_blocks do
+      resources :smart_orders
       member do
         get 'change_state'
       end

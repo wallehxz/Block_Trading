@@ -1,0 +1,77 @@
+<%= form_for(['trade',@focus,@order]) do |f| %>
+<div class="box-body">
+  <div class="col-md-5">
+    <div class="form-group has-error">
+      <label>区块</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-btc"></i>
+        </div>
+        <input type="text" value="<%= @focus.block.full_name %>" class="form-control" disabled>
+        <%= f.hidden_field :focus_id, value:@focus.id %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>状态</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-check-square-o"></i>
+        </div>
+        <%= f.select(:state,[['未生效',false],['已挂单',true]], {prompt:'请选择状态'},{:class => 'form-control'}) %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>买卖</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-gg"></i>
+        </div>
+        <%= f.select(:business,[['买入','1'],['卖出','2']], {prompt:'请选择挂单类型'},{:class => 'form-control'}) %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>因素</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-filter"></i>
+        </div>
+        <%= f.select(:factor,[['大于','>'],['小于','<']], {prompt:'请选择执行条件'},{:class => 'form-control'}) %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>数量</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-tree"></i>
+        </div>
+        <%= f.text_field :amount, class:'form-control', placeholder:'（必填* 执行数量）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>比例</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-sliders"></i>
+        </div>
+        <%= f.text_field :scale, class:'form-control', placeholder:'（必填* 执行比例 (0,1]）' %>
+      </div>
+    </div>
+    <div class="form-group has-error">
+      <label>价值</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <i class="fa fa-cny"></i>
+        </div>
+        <%= f.text_field :expect, class:'form-control', placeholder:'（必填* 期望价格）' %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <hr>
+    <div>
+      <button type="submit" class="btn bg-maroon btn-flat" style="width: 120px">提交</button>
+      <a href="<%= request.referrer %>" class="btn bg-navy btn-flat" style="width: 120px">取消</a>
+    </div>
+  </div>
+</div>
+<% end %>
