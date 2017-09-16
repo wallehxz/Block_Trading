@@ -27,10 +27,9 @@
             </thead>
             <tbody>
             <% today =  Date.current.to_s %>
-            <% yesterday = (Date.current - 1.days).to_s %>
             <% @balances.each do |item| %>
               <tr style="text-align: center">
-                <td><a href="<%= trade_block_ticker_path(block:item.block,start:yesterday,end:today) %>"><%= item.block %></a></td>
+                <td><a href="<%= trade_block_ticker_path(block:item.block,start:today,end:today) %>"><%= item.block %></a></td>
                 <td><%= item.amount %></td>
                 <td>￥: <%= item.buy_price %></td>
                 <td>￥: <%= item.sell_price %></td>
