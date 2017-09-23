@@ -9,7 +9,8 @@ class Api::QuotesController < ApplicationController
   end
 
   def sync_quote(block)
-    price = Nokogiri::HTML(open(block.source)).at_css(block.anchor).children.text
+    # price = Nokogiri::HTML(open(block.source)).at_css(block.anchor).children.text
+    price = block.sync_price rescue 0
     local_ticker(block,price) if price && price.to_f > 0
   end
 
