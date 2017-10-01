@@ -15,13 +15,18 @@ class Quote < ActiveRecord::Base
     end
   end
 
-  def ma5_recent
+  def ma5_one
     (self.tickers.last(5).map {|x| x.last_price }.sum / 5).round(6)
   end
 
-  def ma5_previous
+  def ma5_two
     array = self.tickers.last(6).map {|x| x.last_price }
     ((array.sum - array[-1]) / 5).round(6)
+  end
+
+  def ma5_three
+    array = self.tickers.last(7).map {|x| x.last_price }
+    ((array.sum - array[-1] - array[-2]) / 5).round(6)
   end
 
   def sync_price

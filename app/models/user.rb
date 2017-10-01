@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   def roles
     {0=>'管理员',2=>'普通用户'}[self.role]
   end
-
+  #User.sms_yunpian(content)
   def self.sms_yunpian(content)
     yunpian = 'https://sms.yunpian.com/v2/sms/tpl_single_send.json'
     params = {}

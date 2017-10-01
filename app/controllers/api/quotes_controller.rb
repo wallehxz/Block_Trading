@@ -19,27 +19,37 @@ class Api::QuotesController < ApplicationController
   end
 
   def quotes_report
+    current_hour = Time.now.hour
     string = ''
     Quote.where(state:true).each do |item|
       string << quote_analysis(item) rescue ''
     end
-    Notice.quotes_report(Settings.receive_email,string).deliver_now if string.present?
+    if string.present?
+      User.sms_yunpian(string) if current_hour > 8 #白天发送短信
+      Notice.quotes_report(Settings.receive_email,string).deliver_now if current_hour < 9 #夜晚推送邮件
+    end
   end
 
   def quote_analysis(block)
     tip = ''
-    quote_24h = block.tickers.last(24).map {|x| x.last_price}
+    quote_24h = block.tickers.last(48).map {|x| x.last_price}  #24小时数据点
+    quote_12h = block.tickers.last(24).map {|x| x.last_price}  #12小时数据点
+    return '' if quote_12h.size < 20
     if quote_24h.max == quote_24h[-1]
-      tip << "，处于最高卖出点，涨幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
+      tip << ",最高点,涨幅#{amplitude(quote_24h.min,quote_24h[-1])}%"
+    elsif quote_24h.max == quote_24h[-2]
+      tip << ",涨跌点,跌幅#{amplitude(quote_24h.min,quote_24h[-1])}%"
     elsif quote_24h.min == quote_24h[-1]
-      tip << "，处于最低买入点，涨幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
-    elsif quote_24h[-1] > quote_24h[-2] && quote_24h[-1] > block.ma5_recent && quote_24h[-2] < block.ma5_previous
-      tip << "，处于MA5买入点，涨幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
-    elsif quote_24h[-1] < quote_24h[-2] && quote_24h[-1] < block.ma5_recent && quote_24h[-2] > block.ma5_previous
-      tip << "，处于MA5卖出点，涨幅#{amplitude(quote_24h[0],quote_24h[-1])}%"
+      tip << ",最低点,跌幅#{amplitude(quote_24h.max,quote_24h[-1])}%"
+    elsif quote_24h.min == quote_24h[-2]
+      tip << ",跌涨点,跌幅#{amplitude(quote_24h.max,quote_24h[-1])}%"
+    elsif quote_12h[-1] > quote_12h[-2] && quote_12h[-1] > block.ma5_one && quote_12h[-2] < block.ma5_two && quote_12h[-3] < block.ma5_three
+      tip << ",MA5买入点,涨幅#{amplitude(quote_12h.min,quote_12h[-1])}%"
+    elsif quote_12h[-1] < quote_12h[-2] && quote_12h[-1] < block.ma5_one && quote_12h[-2] > block.ma5_two && quote_12h[-3] > block.ma5_three
+      tip << ",MA5卖出点,跌幅#{amplitude(quote_12h.max,quote_12h[-1])}%"
     end
     color_array = ['#FF9933','#FF6699','#CC66CC','#CC3366','#996666','#6666FF']
-    return "<p style='color:#{color_array[rand(6)]}'>#{block.platform} - #{block.block}, 最新价格 #{quote_24h[-1]}#{tip}</p>" if tip.present?
+    return "<p style='color:#{color_array[rand(6)]}'>#{block.block},价格 #{quote_12h[-1]}#{tip}</p>" if tip.present?
     tip
   end
 
