@@ -19,18 +19,13 @@ class Api::QuotesController < ApplicationController
   end
 
   def quotes_report
-    current_hour = Time.now.hour
-    string = ''
     Quote.where(state:true).each do |item|
-      string << quote_analysis(item) rescue ''
-    end
-    if string.present?
-      User.sms_yunpian(string) if current_hour > 8 #白天发送短信
-      Notice.quotes_report(Settings.receive_email,string).deliver_now if current_hour < 9 #夜晚推送邮件
+      quote_analysis(item) rescue ''
     end
   end
 
   def quote_analysis(block)
+    current_hour = Time.now.hour
     tip = ''
     quote_24h = block.tickers.last(48).map {|x| x.last_price}  #24小时数据点
     quote_12h = block.tickers.last(24).map {|x| x.last_price}  #12小时数据点
@@ -48,9 +43,13 @@ class Api::QuotesController < ApplicationController
     elsif quote_12h[-1] < quote_12h[-2] && quote_12h[-1] < block.ma5_one && quote_12h[-2] > block.ma5_two && quote_12h[-3] > block.ma5_three
       tip << ",MA5卖出点,跌幅#{amplitude(quote_12h.max,quote_12h[-1])}%"
     end
+    text_string = "#{block.block},价格 #{quote_12h[-1]}#{tip}"
     color_array = ['#FF9933','#FF6699','#CC66CC','#CC3366','#996666','#6666FF']
-    return "<p style='color:#{color_array[rand(6)]}'>#{block.block},价格 #{quote_12h[-1]}#{tip}</p>" if tip.present?
-    tip
+    html_string = "<p style='color:#{color_array[rand(6)]}'>#{block.block},价格 #{quote_12h[-1]}#{tip}</p>"
+    if tip.present?
+      User.sms_yunpian(text_string) if current_hour > 8
+      Notice.quotes_report(Settings.receive_email,html_string).deliver_now if current_hour < 9 #夜晚推送邮件
+    end
   end
 
 private
