@@ -32,7 +32,7 @@ class Quote < ActiveRecord::Base
   def sync_price
     res =  Faraday.get self.source
     info = JSON.parse(res.body)
-    price = info['buyStr'][0][0]
+    price = (info['buyStr'][0][0] + info['sellStr'][0][0]) / 2
   end
 
 end
